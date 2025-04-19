@@ -27,8 +27,8 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-white dark:from-red-950 dark:to-black z-0" />
-      
+      <div className="absolute inset-0   dark:from-red-950 dark:to-black z-0" />
+
       <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
         {/* Content Column */}
         <div className="flex flex-col justify-center lg:pr-6 pt-8 lg:pt-0">
@@ -63,12 +63,13 @@ export default function Hero() {
         {/* Image Column */}
         <div className={`flex items-center justify-center lg:justify-end overflow-hidden transition-all duration-700 transform ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
           <div className="relative md:-right-4 lg:-right-8 xl:-right-12 select-none pointer-events-none">
-            <Image 
-              src="/illustrations/Devices-pana.png" 
-              alt="Digital Devices Illustration" 
-              width={700} 
+            <Image
+              src="/illustrations/Devices-pana.png"
+              alt="Digital Devices Illustration"
+              width={700}
               height={700}
               priority
+              loading="eager"
               className="object-contain drop-shadow-sm"
               onLoad={() => setIsLoaded(true)}
             />

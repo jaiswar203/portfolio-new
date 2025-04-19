@@ -7,8 +7,10 @@ export interface IProject {
   image: string;
   tags: string[];
   category: string;
-  liveUrl: string;
-  githubUrl: string;
+  liveUrl?: string;
+  githubUrl?: string;
+  detailedContent?: string;
+  isDetailedPage: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,9 +21,11 @@ const ProjectSchema = new Schema<IProject>(
     description: { type: String, required: true },
     image: { type: String, required: true, default: '/placeholder.svg?height=400&width=600' },
     tags: { type: [String], required: true },
-    category: { type: String, required: true, enum: ['frontend', 'backend', 'fullstack'] },
-    liveUrl: { type: String, required: true },
-    githubUrl: { type: String, required: true },
+    category: { type: String, required: true, enum: ['frontend', 'backend', 'fullstack', 'mobile', 'ai'] },
+    liveUrl: { type: String, required: false },
+    githubUrl: { type: String, required: false },
+    detailedContent: { type: String, required: false },
+    isDetailedPage: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

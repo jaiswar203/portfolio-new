@@ -7,8 +7,10 @@ export interface Project {
   category: string;
   image?: string;
   tags: string[];
-  liveUrl: string;
-  githubUrl: string;
+  liveUrl?: string;
+  githubUrl?: string;
+  detailedContent?: string;
+  isDetailedPage?: boolean;
   featured?: boolean;
   isActive?: boolean;
   createdAt?: string;

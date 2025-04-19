@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import {
   Table,
@@ -33,7 +34,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, PencilIcon, TrashIcon, PlusCircle } from 'lucide-react';
+import { Loader2, PencilIcon, TrashIcon, PlusCircle, FileText } from 'lucide-react';
 import { IProject } from '@/lib/models/Project';
 
 // Fetch all projects
@@ -281,6 +282,15 @@ export default function ProjectsPage() {
                       <PencilIcon className="h-4 w-4" />
                     </Button>
                     <Button
+                      variant="outline"
+                      size="icon"
+                      asChild
+                    >
+                      <Link href={`/admin/dashboard/projects/${project._id}`}>
+                        <FileText className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button
                       variant="destructive"
                       size="icon"
                       onClick={() => handleDelete(project)}
@@ -370,6 +380,8 @@ export default function ProjectsPage() {
                     <SelectItem value="frontend">Frontend</SelectItem>
                     <SelectItem value="backend">Backend</SelectItem>
                     <SelectItem value="fullstack">Fullstack</SelectItem>
+                    <SelectItem value="mobile">Mobile</SelectItem>
+                    <SelectItem value="ai">AI</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -520,6 +532,8 @@ export default function ProjectsPage() {
                     <SelectItem value="frontend">Frontend</SelectItem>
                     <SelectItem value="backend">Backend</SelectItem>
                     <SelectItem value="fullstack">Fullstack</SelectItem>
+                    <SelectItem value="mobile">Mobile</SelectItem>
+                    <SelectItem value="ai">AI</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

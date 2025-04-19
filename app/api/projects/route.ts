@@ -44,8 +44,10 @@ export async function POST(req: NextRequest) {
       image: data.image || '/placeholder.svg?height=400&width=600',
       tags: data.tags || [],
       category: data.category,
-      liveUrl: data.liveUrl || '#',
-      githubUrl: data.githubUrl || '#',
+      liveUrl: data.liveUrl || '',
+      githubUrl: data.githubUrl || '',
+      detailedContent: data.detailedContent || '',
+      isDetailedPage: Boolean(data.isDetailedPage),
     });
     
     return NextResponse.json(newProject, { status: 201 });

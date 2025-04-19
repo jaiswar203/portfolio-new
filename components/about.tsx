@@ -10,9 +10,11 @@ export default function About() {
           <div className="w-full md:w-1/2 flex justify-center">
             <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-red-600 dark:border-red-500">
               <Image
-                src="/placeholder.svg?height=600&width=600"
+                src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="About Me Illustration"
                 fill
+                priority
+                loading="eager"
                 className="object-cover"
               />
             </div>

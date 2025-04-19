@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ExternalLink, Github, Loader2 } from "lucide-react"
+import { ExternalLink, Github, Loader2, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -102,6 +102,19 @@ export default function Projects() {
                     ))}
                   </div>
                   <div className="flex gap-2">
+                    {project.isDetailedPage && (
+                      <Button
+                        variant="default"
+                        size="sm"
+                        asChild
+                        className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-600 dark:hover:bg-red-700"
+                      >
+                        <Link href={`/projects/${project._id}`}>
+                          <Info className="h-4 w-4 mr-2" />
+                          View Details
+                        </Link>
+                      </Button>
+                    )}
                     {project.liveUrl && (
                       <Button
                         variant="outline"

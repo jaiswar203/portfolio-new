@@ -68,10 +68,10 @@ export const metadata = {
   icons: {
     icon: [
       { url: "/favicon.ico" },
-      { url: "/images/logo-light-bg.png", type: "image/png" }
+      { url: "/images/logo-dark-bg.png", type: "image/png" }
     ],
     apple: [
-      { url: "/images/logo-light-bg.png", type: "image/png" }
+      { url: "/images/logo-dark-bg.png", type: "image/png" }
     ]
   },
   openGraph: {

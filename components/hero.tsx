@@ -172,13 +172,6 @@ export default function Hero() {
                 <SendIcon className="mr-2 h-4 w-4" /> Contact Me
               </Button>
               
-              <Button
-                variant="outline"
-                onClick={() => window.open("/resume.pdf", "_blank")}
-                className="border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-sm transition-all duration-300 rounded-full px-8"
-              >
-                <DownloadIcon className="mr-2 h-4 w-4" /> Download CV
-              </Button>
             </motion.div>
             
             <motion.div 

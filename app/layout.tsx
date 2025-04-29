@@ -60,7 +60,41 @@ const satoshi = localFont({
 
 export const metadata = {
   title: "NJT - Nilesh Jaiswar Technologies",
-  description: "Professional portfolio showcasing web development projects and services",
+  description: "Professional portfolio showcasing innovative full-stack development and AI solutions by Nilesh Jaiswar",
+  keywords: ["web development", "full stack", "AI solutions", "portfolio", "Nilesh Jaiswar", "react", "nextjs"],
+  authors: [{ name: "Nilesh Jaiswar" }],
+  creator: "Nilesh Jaiswar",
+  metadataBase: new URL("https://nileshjaiswar.tech"),
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/images/logo-light-bg.png", type: "image/png" }
+    ],
+    apple: [
+      { url: "/images/logo-light-bg.png", type: "image/png" }
+    ]
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://nileshjaiswar.tech",
+    title: "NJT - Nilesh Jaiswar Technologies",
+    description: "Professional portfolio showcasing innovative full-stack development and AI solutions by Nilesh Jaiswar",
+    siteName: "NJT - Nilesh Jaiswar Technologies",
+    images: [{
+      url: "/images/logo-light-bg.png",
+      width: 800,
+      height: 600,
+      alt: "NJT - Nilesh Jaiswar Technologies Logo"
+    }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NJT - Nilesh Jaiswar Technologies",
+    description: "Professional portfolio showcasing innovative full-stack development and AI solutions by Nilesh Jaiswar",
+    images: ["/images/logo-light-bg.png"],
+    creator: "@nileshJaiswar"
+  },
 }
 
 export default function RootLayout({

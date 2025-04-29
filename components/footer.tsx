@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Github, Linkedin, Mail, Twitter, ArrowUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -17,15 +18,15 @@ export default function Footer() {
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-black"></div>
       <div className="absolute inset-0 -z-10 bg-mesh-pattern opacity-30"></div>
       
-      {/* Decorative elements */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent"></div>
-      <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-indigo-50 dark:bg-indigo-900/10 rounded-full filter blur-3xl opacity-30"></div>
-      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-50 dark:bg-purple-900/10 rounded-full filter blur-3xl opacity-30"></div>
-      <div className="absolute top-40 left-10 w-60 h-60 bg-pink-50 dark:bg-pink-900/10 rounded-full filter blur-3xl opacity-20"></div>
+      {/* Decorative elements - updated with logo colors */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent"></div>
+      <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-violet-50 dark:bg-violet-900/10 rounded-full filter blur-3xl opacity-30"></div>
+      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-teal-50 dark:bg-teal-900/10 rounded-full filter blur-3xl opacity-30"></div>
+      <div className="absolute top-40 left-10 w-60 h-60 bg-fuchsia-50 dark:bg-fuchsia-900/10 rounded-full filter blur-3xl opacity-20"></div>
       
       {/* Animated subtle shapes */}
-      <div className="absolute top-20 right-[20%] w-16 h-16 rounded-full border border-indigo-200 dark:border-indigo-800/30 opacity-20 animate-spin-slow"></div>
-      <div className="absolute bottom-40 left-[30%] w-12 h-12 rounded-full border border-purple-200 dark:border-purple-800/30 opacity-20 animate-float"></div>
+      <div className="absolute top-20 right-[20%] w-16 h-16 rounded-full border border-violet-200 dark:border-violet-800/30 opacity-20 animate-spin-slow"></div>
+      <div className="absolute bottom-40 left-[30%] w-12 h-12 rounded-full border border-teal-200 dark:border-teal-800/30 opacity-20 animate-float"></div>
       
       <div className="container max-w-7xl mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
@@ -33,13 +34,30 @@ export default function Footer() {
           <div className="md:col-span-1">
             <Link
               href="#home"
-              className="inline-block text-2xl font-bold"
+              className="inline-block"
               onClick={(e) => {
                 e.preventDefault()
                 scrollToTop()
               }}
             >
-              <span className="text-gradient">JaisFolio</span>
+              <div className="flex flex-col items-start">
+                <Image 
+                  src="/images/logo-light-bg.png" 
+                  className="dark:hidden h-auto" 
+                  alt="Nilesh Jaiswar Technologies" 
+                  width={120} 
+                  height={120} 
+                  loading="eager" 
+                />
+                <Image 
+                  src="/images/logo-dark-bg.png" 
+                  className="hidden dark:block h-auto" 
+                  alt="Nilesh Jaiswar Technologies" 
+                  width={120} 
+                  height={120} 
+                  loading="eager" 
+                />
+              </div>
             </Link>
             <p className="mt-4 text-gray-600 dark:text-gray-400 leading-relaxed">
               Building powerful full-stack applications and intelligent AI agents that transform ideas into impactful digital experiences.
@@ -55,11 +73,11 @@ export default function Footer() {
                   key={index}
                   variant="outline" 
                   size="icon" 
-                  className="rounded-full border-gray-200 dark:border-gray-800 hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30 transition-all duration-300 hover:shadow-sm group" 
+                  className="rounded-full border-gray-200 dark:border-gray-800 hover:border-violet-300 dark:hover:border-violet-700 hover:bg-gradient-to-r hover:from-violet-50 hover:to-teal-50 dark:hover:from-violet-950/30 dark:hover:to-teal-950/30 transition-all duration-300 hover:shadow-sm group" 
                   asChild
                 >
                   <Link href={social.href} target="_blank" rel="noopener noreferrer">
-                    <span className="text-gray-600 dark:text-gray-400 group-hover:text-gradient">{social.icon}</span>
+                    <span className="text-gray-600 dark:text-gray-400 group-hover:text-violet-600 dark:group-hover:text-violet-400">{social.icon}</span>
                     <span className="sr-only">{social.label}</span>
                   </Link>
                 </Button>
@@ -81,9 +99,9 @@ export default function Footer() {
                 <li key={index}>
                   <Link 
                     href={link.href} 
-                    className="group text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 flex items-center"
+                    className="group text-gray-600 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-300 flex items-center"
                   >
-                    <span className="w-0 h-px bg-gradient-to-r from-indigo-500 to-purple-500 mr-0 group-hover:w-3 group-hover:mr-2 transition-all duration-300 inline-block"></span>
+                    <span className="w-0 h-px bg-gradient-to-r from-violet-500 to-teal-500 mr-0 group-hover:w-3 group-hover:mr-2 transition-all duration-300 inline-block"></span>
                     {link.label}
                   </Link>
                 </li>
@@ -96,8 +114,8 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Contact Info</h3>
             <div className="space-y-3">
               <p className="text-gray-600 dark:text-gray-400 flex items-start">
-                <Mail className="h-4 w-4 mr-2 mt-1 text-indigo-600 dark:text-indigo-400" />
-                <a href="mailto:jaiswarnilesh2002@gmail.com" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
+                <Mail className="h-4 w-4 mr-2 mt-1 text-violet-600 dark:text-violet-400" />
+                <a href="mailto:jaiswarnilesh2002@gmail.com" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-300">
                   jaiswarnilesh2002@gmail.com
                 </a>
               </p>
@@ -111,14 +129,14 @@ export default function Footer() {
         
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-200/50 dark:border-gray-800/50">
           <p className="text-sm text-gray-500 dark:text-gray-500 mb-4 md:mb-0">
-            &copy; {currentYear} <span className="text-gradient">JaisFolio</span>. All rights reserved.
+            &copy; {currentYear} <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-600 via-fuchsia-600 to-teal-500 dark:from-violet-400 dark:via-fuchsia-400 dark:to-teal-400">Nilesh Jaiswar Technologies</span>. All rights reserved.
           </p>
           
           <div className="flex items-center gap-4">
             <Button 
               variant="ghost" 
               size="icon" 
-              className="rounded-full h-10 w-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gradient-to-r hover:from-indigo-100 hover:to-purple-100 dark:hover:from-indigo-900/20 dark:hover:to-purple-900/20 text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300 hover:shadow-sm group" 
+              className="rounded-full h-10 w-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gradient-to-r hover:from-violet-100 hover:to-teal-100 dark:hover:from-violet-900/20 dark:hover:to-teal-900/20 text-gray-600 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-300 hover:shadow-sm group" 
               onClick={scrollToTop}
             >
               <ArrowUp className="h-4 w-4 group-hover:animate-float" />

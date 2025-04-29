@@ -6,8 +6,8 @@ import { Menu, X, ChevronDown } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { useMobile } from "@/hooks/use-mobile"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 
 const navItems = [
   { name: "Home", href: "#home" },
@@ -29,9 +29,9 @@ const smoothSpring = { type: "spring", stiffness: 350, damping: 30 };
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("") // Initialize empty, let effect handle initial
+  const [activeSection, setActiveSection] = useState("")
   const [showMoreMenu, setShowMoreMenu] = useState(false)
-  const isMobile = useMobile()
+  const [isScrolled, setIsScrolled] = useState(false)
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
   // Effect for closing dropdown
@@ -46,6 +46,21 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [moreMenuRef]);
+
+  // Effect for scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    // Initial check
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   // Effect for scroll spy
   useEffect(() => {
@@ -111,127 +126,64 @@ export default function Header() {
 
   return (
     <motion.header
-      // Removed initial animation here, handled by scroll state
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        "bg-transparent py-4",
+        isScrolled
+          ? "bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl shadow-lg border-b border-gray-200/30 dark:border-gray-800/30 py-2"
+          : "bg-transparent py-4",
       )}
     >
       <div className="container flex items-center justify-between">
         <Link
           href="#home"
-          className="group relative font-extrabold text-2xl transition-all duration-300"
+          className="group relative transition-all duration-300"
           onClick={(e) => {
             e.preventDefault()
             scrollToSection("#home")
           }}
         >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-500 dark:from-indigo-400 dark:via-purple-400 dark:to-teal-400">
-            JaisFolio
-          </span>
-          {/* Optional: Underline on hover for logo */}
-          {/* <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-600 dark:from-indigo-400 dark:via-purple-400 dark:to-teal-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span> */}
+          <Image src="/images/logo-light-bg.png" className="dark:hidden"  alt="NJT" width={90} height={90} loading="eager" />
+          <Image src="/images/logo-dark-bg.png" className="hidden dark:block"  alt="NJT" width={90} height={90} loading="eager" />
         </Link>
 
-        {isMobile ? (
-          <>
-            {/* Mobile Menu Toggle and Theme Toggle */}
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden rounded-full hover:bg-indigo-50/50 dark:hover:bg-indigo-950/50 transition-colors duration-300 p-2"
-                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              >
-                <AnimatePresence initial={false} mode="wait">
-                  <motion.div
-                    key={mobileMenuOpen ? "x" : "menu"}
-                    initial={{ rotate: mobileMenuOpen ? -90 : 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: mobileMenuOpen ? 90 : -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {mobileMenuOpen ?
-                      <X className="h-5 w-5 text-indigo-600 dark:text-indigo-400" /> :
-                      <Menu className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                    }
-                  </motion.div>
-                </AnimatePresence>
-              </Button>
-            </div>
-
-            {/* Mobile Menu Panel */}
-            <AnimatePresence>
-              {mobileMenuOpen && (
+        <div className="flex items-center gap-3">
+          <div className="md:hidden flex items-center gap-3">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="rounded-full hover:bg-violet-50/50 dark:hover:bg-violet-950/50 transition-colors duration-300 p-2"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            >
+              <AnimatePresence initial={false} mode="wait">
                 <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="fixed inset-x-0 top-16 z-40 bg-white/90 dark:bg-gray-950/90 backdrop-blur-lg shadow-lg overflow-hidden"
-                  style={{ borderBottomLeftRadius: '1rem', borderBottomRightRadius: '1rem' }}
+                  key={mobileMenuOpen ? "x" : "menu"}
+                  initial={{ rotate: mobileMenuOpen ? -90 : 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: mobileMenuOpen ? 90 : -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <nav className="flex flex-col gap-2 p-4">
-                    {navItems.map((item, index) => (
-                      <motion.div
-                        key={item.name}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                        className="relative"
-                      >
-                        <Link
-                          href={item.href}
-                          className={cn(
-                            "flex items-center text-base font-medium transition-colors duration-200 py-3 px-4 rounded-lg w-full",
-                            activeSection === item.href
-                              ? "text-indigo-700 dark:text-indigo-300 font-semibold bg-indigo-50/80 dark:bg-indigo-950/60"
-                              : "text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30"
-                          )}
-                          onClick={(e) => {
-                            e.preventDefault()
-                            scrollToSection(item.href)
-                          }}
-                        >
-                          {activeSection === item.href && (
-                            <motion.span
-                              layoutId="activeMobileIndicator" // Unique layoutId for mobile
-                              className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-500 via-purple-500 to-teal-500 rounded-r-full"
-                              initial={false}
-                              transition={smoothSpring} // Use smooth spring animation
-                            />
-                          )}
-                          <motion.span
-                            className="ml-4 relative z-10" // Ensure text is above indicator
-                            animate={{ scale: activeSection === item.href ? 1.03 : 1 }} // Subtle scale on active
-                            transition={{ duration: 0.2 }}
-                          >
-                            {item.name}
-                          </motion.span>
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </nav>
+                  {mobileMenuOpen ?
+                    <X className="h-5 w-5 text-violet-600 dark:text-violet-400" /> :
+                    <Menu className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+                  }
                 </motion.div>
-              )}
-            </AnimatePresence>
-          </>
-        ) : (
-          // Desktop Navigation
-          <div className="flex items-center gap-5">
+              </AnimatePresence>
+            </Button>
+          </div>
+
+          <div className="hidden md:flex items-center gap-5">
             <nav className="flex items-center gap-1 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md rounded-full px-2 py-1 border border-gray-200/30 dark:border-gray-800/30 shadow-sm">
-              {/* Primary Nav Items */}
               {primaryNavItems.map((item) => (
                 <div key={item.name} className="relative">
                   <Link
                     href={item.href}
                     className={cn(
-                      "text-sm font-medium px-4 py-2 rounded-full transition-all duration-200 relative block group", // Use block for layout anim
+                      "text-sm font-medium px-4 py-2 rounded-full transition-all duration-200 relative block group",
                       activeSection === item.href
-                        ? "text-white dark:text-gray-950" // Active text color
-                        : "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
+                        ? "text-white dark:text-gray-950"
+                        : "text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
                     )}
                     onClick={(e) => {
                       e.preventDefault()
@@ -240,15 +192,15 @@ export default function Header() {
                   >
                     {activeSection === item.href && (
                       <motion.span
-                        layoutId="activeDesktopIndicator" // Unique layoutId for desktop
-                        className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-500 rounded-full -z-10 shadow-md"
+                        layoutId="activeDesktopIndicator"
+                        className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-teal-500 rounded-full -z-10 shadow-md"
                         initial={false}
-                        transition={smoothSpring} // Use smooth spring animation
+                        transition={smoothSpring}
                       />
                     )}
                     <motion.span
-                      className="relative z-10" // Ensure text is above indicator
-                      animate={{ scale: activeSection === item.href ? 1.05 : 1 }} // Subtle scale on active
+                      className="relative z-10"
+                      animate={{ scale: activeSection === item.href ? 1.05 : 1 }}
                       transition={{ duration: 0.2 }}
                     >
                       {item.name}
@@ -257,31 +209,29 @@ export default function Header() {
                 </div>
               ))}
 
-              {/* More Dropdown Button */}
               {secondaryNavItems.length > 0 && (
                 <div className="relative" ref={moreMenuRef}>
                   <button
                     onClick={() => setShowMoreMenu(!showMoreMenu)}
                     className={cn(
-                      "flex items-center text-sm font-medium px-4 py-2 rounded-full transition-colors duration-200 group relative", // Use relative for indicator positioning
+                      "flex items-center text-sm font-medium px-4 py-2 rounded-full transition-colors duration-200 group relative",
                       secondaryNavItems.some(item => item.href === activeSection)
-                        ? "text-white dark:text-gray-950" // Active style if an item inside is active
-                        : "text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
+                        ? "text-white dark:text-gray-950"
+                        : "text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
                     )}
                     aria-haspopup="true"
                     aria-expanded={showMoreMenu}
                   >
                     {secondaryNavItems.some(item => item.href === activeSection) && (
-                      // Apply gradient background if an item inside is active
                       <motion.span
-                        layoutId="activeDesktopIndicator" // Share the same layoutId
-                        className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-500 rounded-full -z-10 shadow-md"
+                        layoutId="activeDesktopIndicator"
+                        className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-teal-500 rounded-full -z-10 shadow-md"
                         initial={false}
                         transition={smoothSpring}
                       />
                     )}
                     <motion.span
-                      className="relative z-10" // Ensure text is above indicator
+                      className="relative z-10"
                       animate={{ scale: secondaryNavItems.some(item => item.href === activeSection) ? 1.05 : 1 }}
                       transition={{ duration: 0.2 }}
                     >
@@ -290,11 +240,10 @@ export default function Header() {
                     <ChevronDown className={cn(
                       "ml-1 h-4 w-4 transition-transform duration-200 relative z-10",
                       showMoreMenu ? "transform rotate-180" : "",
-                      secondaryNavItems.some(item => item.href === activeSection) ? "" : "text-gray-400 group-hover:text-indigo-500 dark:group-hover:text-indigo-400" // Icon color
+                      secondaryNavItems.some(item => item.href === activeSection) ? "" : "text-gray-400 group-hover:text-violet-500 dark:group-hover:text-violet-400"
                     )} />
                   </button>
 
-                  {/* Dropdown Menu Content */}
                   <AnimatePresence>
                     {showMoreMenu && (
                       <motion.div
@@ -311,16 +260,14 @@ export default function Header() {
                             className={cn(
                               "block px-4 py-2 text-sm transition-colors duration-200 w-full text-left",
                               activeSection === item.href
-                                ? "font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-900/40"
+                                ? "font-semibold text-violet-600 dark:text-violet-400 bg-violet-50/60 dark:bg-violet-900/40"
                                 : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
                             )}
                             onClick={(e) => {
                               e.preventDefault()
                               scrollToSection(item.href)
-                              // setShowMoreMenu(false) // Already handled by effect
                             }}
                           >
-                            {/* Add subtle scale on hover/active for dropdown items too */}
                             <motion.span
                               animate={{ scale: activeSection === item.href ? 1.03 : 1 }}
                               transition={{ duration: 0.2 }}
@@ -336,10 +283,65 @@ export default function Header() {
                 </div>
               )}
             </nav>
-            {/* Theme toggle outside the nav group */}
             <ThemeToggle />
           </div>
-        )}
+        </div>
+
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              key="mobile-menu-panel"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="fixed inset-x-0 top-16 z-40 bg-white/90 dark:bg-gray-950/90 backdrop-blur-lg shadow-lg overflow-hidden md:hidden"
+              style={{ borderBottomLeftRadius: '1rem', borderBottomRightRadius: '1rem' }}
+            >
+              <nav className="flex flex-col gap-2 p-4">
+                {navItems.map((item, index) => (
+                  <motion.div
+                    key={item.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    className="relative"
+                  >
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "flex items-center text-base font-medium transition-colors duration-200 py-3 px-4 rounded-lg w-full",
+                        activeSection === item.href
+                          ? "text-violet-700 dark:text-violet-300 font-semibold bg-violet-50/80 dark:bg-violet-950/60"
+                          : "text-gray-700 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50/50 dark:hover:bg-violet-950/30"
+                      )}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        scrollToSection(item.href)
+                      }}
+                    >
+                      {activeSection === item.href && (
+                        <motion.span
+                          layoutId="activeMobileIndicator"
+                          className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-violet-500 via-fuchsia-500 to-teal-500 rounded-r-full"
+                          initial={false}
+                          transition={smoothSpring}
+                        />
+                      )}
+                      <motion.span
+                        className="ml-4 relative z-10"
+                        animate={{ scale: activeSection === item.href ? 1.03 : 1 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {item.name}
+                      </motion.span>
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.header>
   )

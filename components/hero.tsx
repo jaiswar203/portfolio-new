@@ -171,7 +171,6 @@ export default function Hero() {
               >
                 <SendIcon className="mr-2 h-4 w-4" /> Contact Me
               </Button>
-              
             </motion.div>
             
             <motion.div 

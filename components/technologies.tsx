@@ -118,28 +118,30 @@ export default function Technologies() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex justify-center mb-12"
           >
-            <TabsList className="p-1 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200/30 dark:border-gray-800/30 rounded-full shadow-glass">
-              {categories.map((category) => (
-                <TabsTrigger
-                  key={category.id}
-                  value={category.id}
-                  className={`relative rounded-full px-4 py-2 transition-all duration-200 ${
-                    activeTab === category.id 
-                      ? "text-white shadow-md" 
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
-                  }`}
-                >
-                  {activeTab === category.id && (
-                    <motion.span 
-                      layoutId="activeTabIndicator"
-                      className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full -z-10"
-                    />
-                  )}
-                  <span className="mr-2">{category.icon}</span>
-                  <span>{category.label}</span>
-                </TabsTrigger>
-              ))}
-            </TabsList>
+            <div className="overflow-x-auto">
+              <TabsList className="p-1 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200/30 dark:border-gray-800/30 rounded-full shadow-glass">
+                {categories.map((category) => (
+                  <TabsTrigger
+                    key={category.id}
+                    value={category.id}
+                    className={`relative rounded-full px-4 py-2 transition-all duration-200 ${
+                      activeTab === category.id 
+                        ? "text-white shadow-md" 
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+                    }`}
+                  >
+                    {activeTab === category.id && (
+                      <motion.span 
+                        layoutId="activeTabIndicator"
+                        className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full -z-10"
+                      />
+                    )}
+                    <span className="mr-2">{category.icon}</span>
+                    <span>{category.label}</span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </div>
           </motion.div>
 
           {categories.map((category) => (

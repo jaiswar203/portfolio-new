@@ -1,22 +1,14 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { ArrowRightIcon, BrainIcon, CodeIcon, ServerIcon } from "lucide-react"
+import { BrainIcon, CodeIcon, ServerIcon } from "lucide-react"
 
 export default function About() {
-  const skills = [
-    "React", "Next.js", "TypeScript", "TailwindCSS", 
-    "Node.js", "Express", "MongoDB", "Firebase",
-    "Python", "TensorFlow", "NLP", "Machine Learning",
-    "Docker", "AWS", "CI/CD", "RESTful APIs"
-  ]
-
   // Animation variants
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       y: 0,
       transition: { duration: 0.6 }
     }
@@ -30,15 +22,6 @@ export default function About() {
     }
   }
 
-  const skillVariants = {
-    initial: { opacity: 0, scale: 0.8 },
-    animate: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { type: "spring", stiffness: 100 }
-    }
-  }
-
   return (
     <section id="about" className="py-24 bg-gray-50 dark:bg-gray-900/30 relative overflow-hidden">
       {/* Decorative elements */}
@@ -46,10 +29,10 @@ export default function About() {
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-indigo-500/5 to-transparent rounded-full blur-3xl" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-gradient-to-tr from-purple-500/5 to-transparent rounded-full blur-3xl" />
         <div className="absolute top-1/3 right-1/3 w-72 h-72 bg-gradient-to-tl from-teal-500/5 to-transparent rounded-full blur-3xl" />
-        
+
         <div className="absolute top-1/4 left-10 w-72 h-72 border border-gray-200 dark:border-gray-700/30 rounded-full opacity-50" />
         <div className="absolute bottom-1/3 right-10 w-48 h-48 border border-gray-200 dark:border-gray-700/30 rounded-full opacity-40" />
-        
+
         <svg className="absolute top-0 left-0 w-full h-full opacity-30 dark:opacity-10" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
             <pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse">
@@ -61,7 +44,7 @@ export default function About() {
       </div>
 
       <div className="container relative">
-        <motion.div 
+        <motion.div
           initial="initial"
           whileInView="animate"
           viewport={{ once: true, amount: 0.3 }}
@@ -70,20 +53,20 @@ export default function About() {
           <motion.div variants={fadeIn} className="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 text-sm font-medium mb-4 border border-indigo-200 dark:border-indigo-800/30">
             <span>About Me</span>
           </motion.div>
-          
+
           <motion.h2 variants={fadeIn} className="text-3xl md:text-4xl font-bold mb-4">
             My Journey & Expertise
           </motion.h2>
-          
+
           <motion.div variants={fadeIn} className="w-24 h-1.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-teal-500 rounded-full mb-6" />
-          
+
           <motion.p variants={fadeIn} className="max-w-2xl text-gray-600 dark:text-gray-300 text-lg">
             Discover my background, expertise, and passion for creating exceptional digital experiences and intelligent solutions.
           </motion.p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -139,11 +122,11 @@ class SmartAgent extends Agent {
 export default new SmartAgent();`}</code>
                 </pre>
               </div>
-              
+
               {/* Tech illustrations */}
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <div className="w-48 h-48 relative">
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
@@ -152,8 +135,8 @@ export default new SmartAgent();`}</code>
                   >
                     <CodeIcon className="h-12 w-12 text-indigo-600 dark:text-indigo-400" />
                   </motion.div>
-                  
-                  <motion.div 
+
+                  <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
@@ -162,8 +145,8 @@ export default new SmartAgent();`}</code>
                   >
                     <BrainIcon className="h-12 w-12 text-purple-600 dark:text-purple-400" />
                   </motion.div>
-                  
-                  <motion.div 
+
+                  <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
@@ -173,40 +156,40 @@ export default new SmartAgent();`}</code>
                     <ServerIcon className="h-12 w-12 text-teal-600 dark:text-teal-400" />
                   </motion.div>
                 </div>
-                
+
                 {/* Connecting lines */}
                 <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
-                  <motion.path 
+                  <motion.path
                     initial={{ pathLength: 0, opacity: 0 }}
                     whileInView={{ pathLength: 1, opacity: 0.5 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1.5, delay: 1.2 }}
-                    d="M180 140 L230 170" 
-                    stroke="url(#gradient1)" 
-                    strokeWidth="2" 
-                    fill="none" 
+                    d="M180 140 L230 170"
+                    stroke="url(#gradient1)"
+                    strokeWidth="2"
+                    fill="none"
                     strokeDasharray="5,5"
                   />
-                  <motion.path 
+                  <motion.path
                     initial={{ pathLength: 0, opacity: 0 }}
                     whileInView={{ pathLength: 1, opacity: 0.5 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1.5, delay: 1.4 }}
-                    d="M230 200 L180 230" 
-                    stroke="url(#gradient2)" 
-                    strokeWidth="2" 
-                    fill="none" 
+                    d="M230 200 L180 230"
+                    stroke="url(#gradient2)"
+                    strokeWidth="2"
+                    fill="none"
                     strokeDasharray="5,5"
                   />
-                  <motion.path 
+                  <motion.path
                     initial={{ pathLength: 0, opacity: 0 }}
                     whileInView={{ pathLength: 1, opacity: 0.5 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1.5, delay: 1.6 }}
-                    d="M150 230 L150 160" 
-                    stroke="url(#gradient3)" 
-                    strokeWidth="2" 
-                    fill="none" 
+                    d="M150 230 L150 160"
+                    stroke="url(#gradient3)"
+                    strokeWidth="2"
+                    fill="none"
                     strokeDasharray="5,5"
                   />
                   <defs>
@@ -225,20 +208,20 @@ export default new SmartAgent();`}</code>
                   </defs>
                 </svg>
               </div>
-              
+
               {/* Experience badge */}
               <div className="absolute top-4 right-4 bg-white dark:bg-gray-900 shadow-lg rounded-xl p-4 flex flex-col items-center">
-                <div className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">5+</div>
+                <div className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">3+</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">Years Experience</div>
               </div>
             </div>
-            
+
             {/* Decorative glows */}
             <div className="absolute -right-6 -bottom-6 w-36 h-36 bg-gradient-to-br from-indigo-500/50 to-purple-600/50 rounded-2xl -z-10 blur-[3px]" />
             <div className="absolute -left-6 -top-6 w-36 h-36 bg-gradient-to-tr from-teal-500/30 to-transparent rounded-2xl -z-10 blur-[3px]" />
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial="initial"
             whileInView="animate"
             viewport={{ once: true, amount: 0.3 }}
@@ -248,52 +231,41 @@ export default new SmartAgent();`}</code>
             <motion.h3 variants={fadeIn} className="text-2xl font-bold mb-4">
               Who I Am
             </motion.h3>
-            
+
             <motion.p variants={fadeIn} className="text-gray-600 dark:text-gray-300 mb-6">
-              I&apos;m a passionate Full Stack Developer and AI Agent Developer with a focus on creating 
-              intelligent, scalable, and user-friendly applications. With over 5 years of experience 
-              in the field, I&apos;ve worked on diverse projects ranging from complex enterprise systems 
-              to cutting-edge AI solutions.
+              I&apos;m a Full Stack Developer and AI Agent Integrator with 3+ years of hands-on
+              experience building robust digital solutions across web, mobile, and AI-driven
+              domains. Over the past year, I&apos;ve helped businesses streamline operations,
+              enhance productivity, and bring ideas to life through intelligent, scalable systems.
             </motion.p>
-            
+
             <motion.p variants={fadeIn} className="text-gray-600 dark:text-gray-300 mb-8">
-              My approach combines deep technical expertise across the entire stack with an understanding 
-              of AI capabilities and limitations. I specialize in building applications that not only 
-              function flawlessly but also leverage artificial intelligence to deliver enhanced user 
-              experiences and business value. When I&apos;m not coding, I&apos;m researching the latest developments 
-              in machine learning, contributing to open-source projects, or writing about emerging technologies.
+              My expertise lies in developing domain-specific AI agents that enhance internal
+              workflows — from analyzing audit data in GRC platforms to automating routine
+              decision-making processes. Alongside this, I architect and develop full-fledged web
+              and mobile applications tailored to organizational needs, often coupled with
+              custom CMS dashboards for complete content control.
             </motion.p>
-            
-            <motion.h3 variants={fadeIn} className="text-2xl font-bold mb-4">
-              My Skills
-            </motion.h3>
-            
-            <motion.div 
-              variants={staggerContainer}
-              className="flex flex-wrap gap-2 mb-8"
-            >
-              {skills.map((skill, index) => (
-                <motion.span
-                  key={index}
-                  variants={skillVariants}
-                  className="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full shadow-sm border border-gray-100 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/10 transition-colors duration-300"
-                >
-                  {skill}
-                </motion.span>
-              ))}
+
+            <motion.div variants={fadeIn} className="mb-8">
+              <h4 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-3">Some notable solutions I've delivered include:</h4>
+              <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300">
+                <li>A Learning Management System with an integrated course builder</li>
+                <li>A real estate platform with dynamic listings and lead capture workflows</li>
+                <li>An AI-powered platform integrating OpenAI, image generation models, voice synthesis, and more</li>
+              </ul>
             </motion.div>
-            
-            <motion.div variants={fadeIn} className="mt-4">
-              <Button 
-                onClick={() => window.open("/resume.pdf", "_blank")}
-                className="bg-white dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 shadow-sm"
-              >
-                View Full Resume <ArrowRightIcon className="ml-2 h-4 w-4" />
-              </Button>
-            </motion.div>
+
+            <motion.p variants={fadeIn} className="text-gray-600 dark:text-gray-300 mb-8">
+              I thrive at the intersection of technology, usability, and innovation — blending
+              backend power, frontend precision, and AI intelligence to build systems that
+              deliver real-world impact.
+            </motion.p>
+
+
           </motion.div>
         </div>
       </div>
-    </section>
+    </section >
   )
 }

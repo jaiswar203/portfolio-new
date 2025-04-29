@@ -1,27 +1,16 @@
 import mongoose, { Schema } from 'mongoose';
-
-export interface ITestimonial {
-  _id?: string;
-  content: string;
-  name: string;
-  role?: string;
-  company?: string;
-  position: string;
-  image: string;
-  avatar?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { ITestimonial } from '@/lib/types/testimonial';
 
 const TestimonialSchema = new Schema<ITestimonial>(
   {
     content: { type: String, required: true },
     name: { type: String, required: true },
-    role: { type: String },
+    role: { type: String, required: true },
     company: { type: String },
-    position: { type: String, required: true },
     image: { type: String, required: true, default: '/placeholder.svg?height=80&width=80' },
     avatar: { type: String },
+    rating: { type: Number },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

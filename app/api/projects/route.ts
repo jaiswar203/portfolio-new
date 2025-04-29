@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Project from '@/lib/models/Project';
 import { authMiddleware } from '@/lib/auth';
+import { ProjectInput } from '@/lib/types/project';
 
 // GET all projects
 export async function GET() {
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
   if (authError) return authError;
 
   try {
-    const data = await req.json();
+    const data: ProjectInput = await req.json();
     
     // Validate required fields
     if (!data.title || !data.description || !data.category) {
@@ -47,6 +48,8 @@ export async function POST(req: NextRequest) {
       liveUrl: data.liveUrl || '',
       githubUrl: data.githubUrl || '',
       detailedContent: data.detailedContent || '',
+      carousels: data.carousels || [],
+      video_url: data.video_url || '',
       isDetailedPage: Boolean(data.isDetailedPage),
     });
     

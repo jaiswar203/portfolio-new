@@ -13,6 +13,6 @@
 
 export { default as api } from './api/index';
 export { apiClient, projectsApi, testimonialsApi, contactApi } from './api/index';
-export type { Project } from './api/projects';
-export type { Testimonial } from './api/testimonials';
+export type { ProjectDTO, ProjectInput, ProjectUpdate } from './types/project';
+export type { ITestimonial, TestimonialDTO, TestimonialInput, TestimonialUpdate } from './types/testimonial';
 export type { ContactFormData } from './api/contact'; 

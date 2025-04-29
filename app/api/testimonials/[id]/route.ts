@@ -81,11 +81,12 @@ export async function PUT(
       {
         content: data.content || testimonial.content,
         name: data.name || testimonial.name,
-        position: data.position || testimonial.position,
-        image: data.image || testimonial.image,
         role: data.role || testimonial.role,
+        image: data.image || testimonial.image,
         company: data.company || testimonial.company,
         avatar: data.avatar || testimonial.avatar,
+        rating: data.rating !== undefined ? data.rating : testimonial.rating,
+        isActive: data.isActive !== undefined ? data.isActive : testimonial.isActive,
       },
       { new: true }
     );

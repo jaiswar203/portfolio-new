@@ -3,6 +3,7 @@ import connectDB from "@/lib/mongodb";
 import Project from "@/lib/models/Project";
 import { authMiddleware } from "@/lib/auth";
 import mongoose from "mongoose";
+import { ProjectUpdate } from "@/lib/types/project";
 
 // Helper function to validate MongoDB ObjectId
 function isValidObjectId(id: string) {
@@ -52,7 +53,7 @@ export async function PUT(
 
   try {
     const { id } = await params;
-    const data = await req.json();
+    const data: ProjectUpdate = await req.json();
 
     if (!isValidObjectId(id)) {
       return NextResponse.json(
@@ -81,6 +82,8 @@ export async function PUT(
         liveUrl: data.liveUrl,
         githubUrl: data.githubUrl,
         detailedContent: data.detailedContent,
+        carousels: data.carousels,
+        video_url: data.video_url,
         isDetailedPage: data.isDetailedPage,
       },
       { new: true, runValidators: true }

@@ -1,27 +1,11 @@
 import apiClient from './client';
-
-export interface Project {
-  _id?: string;
-  title: string;
-  description: string;
-  category: string;
-  image?: string;
-  tags: string[];
-  liveUrl?: string;
-  githubUrl?: string;
-  detailedContent?: string;
-  isDetailedPage?: boolean;
-  featured?: boolean;
-  isActive?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import { ProjectDTO, ProjectInput, ProjectUpdate } from '@/lib/types/project';
 
 const projectsApi = {
   /**
    * Get all projects
    */
-  getAllProjects: async (): Promise<Project[]> => {
+  getAllProjects: async (): Promise<ProjectDTO[]> => {
     const response = await apiClient.get('/projects');
     return response.data;
   },
@@ -29,7 +13,7 @@ const projectsApi = {
   /**
    * Get active projects only
    */
-  getActiveProjects: async (): Promise<Project[]> => {
+  getActiveProjects: async (): Promise<ProjectDTO[]> => {
     const response = await apiClient.get('/projects?active=true');
     return response.data;
   },
@@ -37,7 +21,7 @@ const projectsApi = {
   /**
    * Get featured projects
    */
-  getFeaturedProjects: async (): Promise<Project[]> => {
+  getFeaturedProjects: async (): Promise<ProjectDTO[]> => {
     const response = await apiClient.get('/projects?featured=true');
     return response.data;
   },
@@ -45,7 +29,7 @@ const projectsApi = {
   /**
    * Get projects by category
    */
-  getProjectsByCategory: async (category: string): Promise<Project[]> => {
+  getProjectsByCategory: async (category: string): Promise<ProjectDTO[]> => {
     const response = await apiClient.get(`/projects?category=${category}`);
     return response.data;
   },
@@ -53,7 +37,7 @@ const projectsApi = {
   /**
    * Get a project by ID
    */
-  getProjectById: async (id: string): Promise<Project> => {
+  getProjectById: async (id: string): Promise<ProjectDTO> => {
     const response = await apiClient.get(`/projects/${id}`);
     return response.data;
   },
@@ -61,7 +45,7 @@ const projectsApi = {
   /**
    * Create a new project
    */
-  createProject: async (project: Project): Promise<Project> => {
+  createProject: async (project: ProjectInput): Promise<ProjectDTO> => {
     const response = await apiClient.post('/projects', project);
     return response.data;
   },
@@ -69,7 +53,7 @@ const projectsApi = {
   /**
    * Update an existing project
    */
-  updateProject: async (id: string, project: Partial<Project>): Promise<Project> => {
+  updateProject: async (id: string, project: ProjectUpdate): Promise<ProjectDTO> => {
     const response = await apiClient.put(`/projects/${id}`, project);
     return response.data;
   },

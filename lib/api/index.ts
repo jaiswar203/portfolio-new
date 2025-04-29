@@ -5,7 +5,8 @@ import contactApi from './contact';
 
 export { apiClient, projectsApi, testimonialsApi, contactApi };
 
-export type { Project } from './projects';
+// Use centralized types
+export type { ProjectDTO, ProjectInput, ProjectUpdate } from '../types/project';
 export type { Testimonial } from './testimonials';
 export type { ContactFormData } from './contact';
 

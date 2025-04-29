@@ -59,7 +59,7 @@ const satoshi = localFont({
 })
 
 export const metadata = {
-  title: "NJI - Nilesh Jaiswar Technologies",
+  title: "NJT - Nilesh Jaiswar Technologies",
   description: "Professional portfolio showcasing web development projects and services",
 }
 

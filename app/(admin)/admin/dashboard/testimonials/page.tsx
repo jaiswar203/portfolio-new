@@ -33,14 +33,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Loader2, PencilIcon, TrashIcon, PlusCircle } from 'lucide-react';
-import { Testimonial, testimonialsApi } from '@/lib/api';
+import { testimonialsApi, TestimonialDTO, TestimonialInput, TestimonialUpdate } from '@/lib/api';
 
 export default function TestimonialsPage() {
   const queryClient = useQueryClient();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentTestimonial, setCurrentTestimonial] = useState<Partial<Testimonial>>({});
+  const [currentTestimonial, setCurrentTestimonial] = useState<Partial<TestimonialDTO>>({});
   const [formError, setFormError] = useState<string | null>(null);
 
   // Query to fetch testimonials
@@ -64,7 +64,7 @@ export default function TestimonialsPage() {
 
   // Mutation to update testimonial
   const updateMutation = useMutation({
-    mutationFn: ({ id, testimonial }: { id: string; testimonial: Partial<Testimonial> }) => 
+    mutationFn: ({ id, testimonial }: { id: string; testimonial: TestimonialUpdate }) => 
       testimonialsApi.updateTestimonial(id, testimonial),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['testimonials'] });
@@ -92,7 +92,7 @@ export default function TestimonialsPage() {
   };
 
   // Open edit dialog with testimonial data
-  const handleEdit = (testimonial: Testimonial) => {
+  const handleEdit = (testimonial: TestimonialDTO) => {
     setCurrentTestimonial({
       _id: testimonial._id,
       name: testimonial.name,
@@ -107,7 +107,7 @@ export default function TestimonialsPage() {
   };
 
   // Open delete dialog with testimonial data
-  const handleDelete = (testimonial: Testimonial) => {
+  const handleDelete = (testimonial: TestimonialDTO) => {
     setCurrentTestimonial(testimonial);
     setIsDeleteDialogOpen(true);
   };
@@ -117,12 +117,12 @@ export default function TestimonialsPage() {
     e.preventDefault();
     
     // Basic validation
-    if (!currentTestimonial.name || !currentTestimonial.content) {
+    if (!currentTestimonial.name || !currentTestimonial.content || !currentTestimonial.role) {
       setFormError('Please fill out all required fields');
       return;
     }
     
-    createMutation.mutate(currentTestimonial as Testimonial);
+    createMutation.mutate(currentTestimonial as TestimonialInput);
   };
 
   // Handle update testimonial form submission
@@ -130,7 +130,7 @@ export default function TestimonialsPage() {
     e.preventDefault();
     
     // Basic validation
-    if (!currentTestimonial.name || !currentTestimonial.content) {
+    if (!currentTestimonial.name || !currentTestimonial.content || !currentTestimonial.role) {
       setFormError('Please fill out all required fields');
       return;
     }
@@ -306,9 +306,13 @@ export default function TestimonialsPage() {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={createMutation.isPending}>
+              <Button 
+                type="submit" 
+                disabled={createMutation.isPending}
+                className={createMutation.isPending ? 'opacity-70 cursor-not-allowed' : ''}
+              >
                 {createMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Save
+                Create
               </Button>
             </DialogFooter>
           </form>

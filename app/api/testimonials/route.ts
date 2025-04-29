@@ -28,9 +28,9 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
     
     // Validate required fields
-    if (!data.content || !data.name || !data.position) {
+    if (!data.content || !data.name || !data.role) {
       return NextResponse.json(
-        { error: 'Content, name, and position are required' },
+        { error: 'Content, name, and role are required' },
         { status: 400 }
       );
     }
@@ -41,11 +41,12 @@ export async function POST(req: NextRequest) {
     const newTestimonial = await Testimonial.create({
       content: data.content,
       name: data.name,
-      position: data.position,
-      image: data.image || '/placeholder.svg?height=80&width=80',
       role: data.role,
+      image: data.image || '/placeholder.svg?height=80&width=80',
       company: data.company,
       avatar: data.avatar,
+      rating: data.rating,
+      isActive: data.isActive,
     });
     
     return NextResponse.json(newTestimonial, { status: 201 });

@@ -1,19 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-
-export interface IProject {
-  _id?: string;
-  title: string;
-  description: string;
-  image: string;
-  tags: string[];
-  category: string;
-  liveUrl?: string;
-  githubUrl?: string;
-  detailedContent?: string;
-  isDetailedPage: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { IProject } from '@/lib/types/project';
 
 const ProjectSchema = new Schema<IProject>(
   {
@@ -25,7 +11,11 @@ const ProjectSchema = new Schema<IProject>(
     liveUrl: { type: String, required: false },
     githubUrl: { type: String, required: false },
     detailedContent: { type: String, required: false },
+    carousels: { type: [String], required: false },
+    video_url: { type: String, required: false },
     isDetailedPage: { type: Boolean, default: false },
+    featured: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

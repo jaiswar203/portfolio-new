@@ -34,18 +34,18 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, PencilIcon, TrashIcon, PlusCircle, FileText } from 'lucide-react';
-import { IProject } from '@/lib/models/Project';
+import { Loader2, PencilIcon, TrashIcon, PlusCircle, FileText, X, Plus } from 'lucide-react';
+import { ProjectDTO } from '@/lib/types/project';
 
 // Fetch all projects
-const fetchProjects = async (): Promise<IProject[]> => {
+const fetchProjects = async (): Promise<ProjectDTO[]> => {
   const res = await fetch('/api/projects');
   if (!res.ok) throw new Error('Failed to fetch projects');
   return res.json();
 };
 
 // Create a new project
-const createProject = async (project: Partial<IProject>): Promise<IProject> => {
+const createProject = async (project: Partial<ProjectDTO>): Promise<ProjectDTO> => {
   const res = await fetch('/api/projects', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -66,8 +66,8 @@ const updateProject = async ({
   project
 }: {
   id: string;
-  project: Partial<IProject>;
-}): Promise<IProject> => {
+  project: Partial<ProjectDTO>;
+}): Promise<ProjectDTO> => {
   const res = await fetch(`/api/projects/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -99,7 +99,7 @@ export default function ProjectsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentProject, setCurrentProject] = useState<Partial<IProject> & { _id?: string }>({});
+  const [currentProject, setCurrentProject] = useState<Partial<ProjectDTO> & { _id?: string }>({});
   const [formError, setFormError] = useState<string | null>(null);
 
   // Query to fetch projects
@@ -150,7 +150,7 @@ export default function ProjectsPage() {
   };
 
   // Open edit dialog with project data
-  const handleEdit = (project: IProject) => {
+  const handleEdit = (project: ProjectDTO) => {
     setCurrentProject({
       _id: project._id,
       title: project.title,
@@ -160,12 +160,14 @@ export default function ProjectsPage() {
       category: project.category,
       liveUrl: project.liveUrl,
       githubUrl: project.githubUrl,
+      carousels: project.carousels || [],
+      video_url: project.video_url,
     });
     setIsEditDialogOpen(true);
   };
 
   // Open delete dialog with project data
-  const handleDelete = (project: IProject) => {
+  const handleDelete = (project: ProjectDTO) => {
     setCurrentProject(project);
     setIsDeleteDialogOpen(true);
   };
@@ -188,6 +190,8 @@ export default function ProjectsPage() {
       category: currentProject.category as string,
       liveUrl: currentProject.liveUrl,
       githubUrl: currentProject.githubUrl,
+      carousels: currentProject.carousels,
+      video_url: currentProject.video_url,
     });
   };
 
@@ -216,6 +220,8 @@ export default function ProjectsPage() {
         category: currentProject.category as string,
         liveUrl: currentProject.liveUrl,
         githubUrl: currentProject.githubUrl,
+        carousels: currentProject.carousels,
+        video_url: currentProject.video_url,
       },
     });
   };
@@ -236,6 +242,47 @@ export default function ProjectsPage() {
     const tagsString = e.target.value;
     const tagsArray = tagsString.split(',').map(tag => tag.trim()).filter(Boolean);
     setCurrentProject((prev) => ({ ...prev, tags: tagsArray }));
+  };
+  
+  // Handle tag input on Enter key
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent form submission
+      const input = e.target as HTMLInputElement;
+      const value = input.value.trim();
+      
+      if (value) {
+        const currentTags = currentProject.tags || [];
+        if (!currentTags.includes(value)) {
+          setCurrentProject((prev) => ({
+            ...prev,
+            tags: [...currentTags, value]
+          }));
+          input.value = '';
+        }
+      }
+    }
+  };
+
+  // Add a single carousel image
+  const addCarouselImage = (url: string) => {
+    if (!url.trim()) return;
+    
+    const currentCarousels = currentProject.carousels || [];
+    setCurrentProject((prev) => ({
+      ...prev,
+      carousels: [...currentCarousels, url.trim()]
+    }));
+  };
+
+  // Remove a carousel image at specific index
+  const removeCarouselImage = (index: number) => {
+    const currentCarousels = [...(currentProject.carousels || [])];
+    currentCarousels.splice(index, 1);
+    setCurrentProject((prev) => ({
+      ...prev,
+      carousels: currentCarousels
+    }));
   };
 
   return (
@@ -267,7 +314,7 @@ export default function ProjectsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {projects.map((project: IProject) => (
+            {projects.map((project: ProjectDTO) => (
               <TableRow key={project._id}>
                 <TableCell className="font-medium">{project.title}</TableCell>
                 <TableCell>{project.category}</TableCell>
@@ -307,7 +354,7 @@ export default function ProjectsPage() {
 
       {/* Create Project Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Add New Project</DialogTitle>
             <DialogDescription>
@@ -390,14 +437,43 @@ export default function ProjectsPage() {
                 <Label htmlFor="tags" className="text-right">
                   Tags
                 </Label>
-                <Input
-                  id="tags"
-                  name="tags"
-                  value={currentProject.tags ? currentProject.tags.join(', ') : ''}
-                  onChange={handleTagsChange}
-                  placeholder="React, Next.js, TypeScript (comma-separated)"
-                  className="col-span-3"
-                />
+                <div className="col-span-3 space-y-2">
+                  {/* Display current tags */}
+                  {currentProject.tags && currentProject.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {currentProject.tags.map((tag, index) => (
+                        <div key={index} className="flex items-center bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">
+                          <span className="text-sm mr-1">{tag}</span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-5 w-5"
+                            onClick={() => {
+                              const newTags = [...(currentProject.tags || [])];
+                              newTags.splice(index, 1);
+                              setCurrentProject((prev) => ({ ...prev, tags: newTags }));
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Add new tag */}
+                  <Input
+                    id="tags"
+                    name="tags"
+                    placeholder="Type a tag and press Enter (e.g., React, Next.js)"
+                    onChange={handleTagsChange}
+                    onKeyDown={handleTagKeyDown}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Enter tags one at a time and press Enter, or separate multiple tags with commas.
+                  </p>
+                </div>
               </div>
 
               <div className="grid grid-cols-4 items-center gap-4">
@@ -424,6 +500,80 @@ export default function ProjectsPage() {
                   value={currentProject.githubUrl || ''}
                   onChange={handleInputChange}
                   placeholder="https://github.com/username/repo"
+                  className="col-span-3"
+                />
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="carousels" className="text-right">
+                  Carousel Images
+                </Label>
+                <div className="col-span-3 space-y-2">
+                  {/* Display current carousel images with option to remove */}
+                  {currentProject.carousels && currentProject.carousels.length > 0 && (
+                    <div className="space-y-2 mb-3">
+                      {currentProject.carousels.map((url, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Input value={url} readOnly className="flex-1" />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => removeCarouselImage(index)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Add new carousel image */}
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="new-carousel"
+                      placeholder="Enter image URL"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault(); // Prevent form submission
+                          const input = e.target as HTMLInputElement;
+                          if (input.value.trim()) {
+                            addCarouselImage(input.value);
+                            input.value = '';
+                          }
+                        }
+                      }}
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      onClick={() => {
+                        const input = document.getElementById('new-carousel') as HTMLInputElement;
+                        if (input?.value) {
+                          addCarouselImage(input.value);
+                          input.value = '';
+                        }
+                      }}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Enter image URLs one at a time. Press Enter or click the + button to add each image.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="video_url" className="text-right">
+                  Video URL
+                </Label>
+                <Input
+                  id="video_url"
+                  name="video_url"
+                  value={currentProject.video_url || ''}
+                  onChange={handleInputChange}
+                  placeholder="https://www.youtube.com/embed/video_id"
                   className="col-span-3"
                 />
               </div>
@@ -459,7 +609,7 @@ export default function ProjectsPage() {
 
       {/* Edit Project Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Project</DialogTitle>
             <DialogDescription>
@@ -542,14 +692,43 @@ export default function ProjectsPage() {
                 <Label htmlFor="edit-tags" className="text-right">
                   Tags
                 </Label>
-                <Input
-                  id="edit-tags"
-                  name="tags"
-                  value={currentProject.tags ? currentProject.tags.join(', ') : ''}
-                  onChange={handleTagsChange}
-                  placeholder="React, Next.js, TypeScript (comma-separated)"
-                  className="col-span-3"
-                />
+                <div className="col-span-3 space-y-2">
+                  {/* Display current tags */}
+                  {currentProject.tags && currentProject.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {currentProject.tags.map((tag, index) => (
+                        <div key={index} className="flex items-center bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">
+                          <span className="text-sm mr-1">{tag}</span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-5 w-5"
+                            onClick={() => {
+                              const newTags = [...(currentProject.tags || [])];
+                              newTags.splice(index, 1);
+                              setCurrentProject((prev) => ({ ...prev, tags: newTags }));
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Add new tag */}
+                  <Input
+                    id="edit-tags"
+                    name="tags"
+                    placeholder="Type a tag and press Enter (e.g., React, Next.js)"
+                    onChange={handleTagsChange}
+                    onKeyDown={handleTagKeyDown}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Enter tags one at a time and press Enter, or separate multiple tags with commas.
+                  </p>
+                </div>
               </div>
 
               <div className="grid grid-cols-4 items-center gap-4">
@@ -576,6 +755,80 @@ export default function ProjectsPage() {
                   value={currentProject.githubUrl || ''}
                   onChange={handleInputChange}
                   placeholder="https://github.com/username/repo"
+                  className="col-span-3"
+                />
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-carousels" className="text-right">
+                  Carousel Images
+                </Label>
+                <div className="col-span-3 space-y-2">
+                  {/* Display current carousel images with option to remove */}
+                  {currentProject.carousels && currentProject.carousels.length > 0 && (
+                    <div className="space-y-2 mb-3">
+                      {currentProject.carousels.map((url, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Input value={url} readOnly className="flex-1" />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => removeCarouselImage(index)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Add new carousel image */}
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="edit-new-carousel"
+                      placeholder="Enter image URL"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault(); // Prevent form submission
+                          const input = e.target as HTMLInputElement;
+                          if (input.value.trim()) {
+                            addCarouselImage(input.value);
+                            input.value = '';
+                          }
+                        }
+                      }}
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      onClick={() => {
+                        const input = document.getElementById('edit-new-carousel') as HTMLInputElement;
+                        if (input?.value) {
+                          addCarouselImage(input.value);
+                          input.value = '';
+                        }
+                      }}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Enter image URLs one at a time. Press Enter or click the + button to add each image.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-video_url" className="text-right">
+                  Video URL
+                </Label>
+                <Input
+                  id="edit-video_url"
+                  name="video_url"
+                  value={currentProject.video_url || ''}
+                  onChange={handleInputChange}
+                  placeholder="https://www.youtube.com/embed/video_id"
                   className="col-span-3"
                 />
               </div>

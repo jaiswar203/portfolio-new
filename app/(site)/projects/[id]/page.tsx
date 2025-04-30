@@ -2,11 +2,11 @@
 
 import "@uiw/react-md-editor/markdown-editor.css"
 import "@uiw/react-markdown-preview/markdown.css"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound, useParams } from "next/navigation"
-import { ArrowLeft, Github, ExternalLink, Code } from "lucide-react"
+import { ArrowLeft, Github, ExternalLink, Code, ZoomIn, ZoomOut, X, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -15,8 +15,10 @@ import { projectsApi } from "@/lib/api"
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel"
 import { motion } from "framer-motion"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 
 // Animation variants similar to Hero
 const fadeInUp = {
@@ -48,9 +50,38 @@ export default function ProjectDetailPage() {
   const [mounted, setMounted] = useState(false)
   const params = useParams<{ id: string }>()
   const projectId = params.id
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [totalSlides, setTotalSlides] = useState(0)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [currentImage, setCurrentImage] = useState("")
 
   useEffect(() => {
     setMounted(true)
+  }, [])
+
+  // Listen to carousel changes to update pagination
+  useEffect(() => {
+    if (!carouselApi) return
+
+    setTotalSlides(carouselApi.scrollSnapList().length)
+    
+    const onSelect = () => {
+      setCurrentSlide(carouselApi.selectedScrollSnap() + 1)
+    }
+    
+    carouselApi.on("select", onSelect)
+    // Initialize with the first slide
+    setCurrentSlide(carouselApi.selectedScrollSnap() + 1)
+    
+    return () => {
+      carouselApi.off("select", onSelect)
+    }
+  }, [carouselApi])
+
+  const openImageModal = useCallback((imageUrl: string) => {
+    setCurrentImage(imageUrl)
+    setModalOpen(true)
   }, [])
 
   const { data: project, isLoading, error } = useQuery({
@@ -264,20 +295,23 @@ export default function ProjectDetailPage() {
                   <div className="h-1 w-16 bg-gradient-to-l from-transparent via-fuchsia-500 to-teal-500 rounded-full"></div>
                 </div>
                 <div className="relative w-full h-auto md:h-[550px] overflow-hidden rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-800/50 bg-white/30 dark:bg-gray-950/30 backdrop-blur-sm p-2">
-                  <Carousel className="w-full h-full" opts={{ loop: true }}>
+                  <Carousel className="w-full h-full" opts={{ loop: true }} setApi={setCarouselApi}>
                     <CarouselContent className="h-full">
                       {project.carousels.map((url, index) => (
                         <CarouselItem key={index} className="h-full">
-                          <div className="relative h-[400px] md:h-[500px] w-full flex items-center justify-center bg-gray-100/50 dark:bg-black/30 rounded-lg overflow-hidden">
+                          <div className="relative h-[400px] md:h-[500px] w-full flex items-center justify-center bg-gray-100/50 dark:bg-black/30 rounded-lg overflow-hidden group cursor-pointer" onClick={() => openImageModal(url)}>
                             <Image
                               src={url}
                               alt={`${project.title} - slide ${index + 1}`}
                               fill
-                              className="object-contain p-4"
+                              className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
                               quality={95}
                               priority={index === 0}
                               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
                             />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 dark:group-hover:bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <ZoomIn className="h-10 w-10 text-white drop-shadow-lg" />
+                            </div>
                           </div>
                         </CarouselItem>
                       ))}
@@ -285,12 +319,116 @@ export default function ProjectDetailPage() {
                     <CarouselPrevious className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 dark:bg-black/70 backdrop-blur-sm hover:bg-white/90 dark:hover:bg-black/90 text-violet-600 dark:text-violet-400 hover:text-fuchsia-600 dark:hover:text-fuchsia-400 rounded-full shadow-md border border-transparent hover:border-violet-200 dark:hover:border-violet-800 transition-all duration-200" />
                     <CarouselNext className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 bg-white/70 dark:bg-black/70 backdrop-blur-sm hover:bg-white/90 dark:hover:bg-black/90 text-violet-600 dark:text-violet-400 hover:text-fuchsia-600 dark:hover:text-fuchsia-400 rounded-full shadow-md border border-transparent hover:border-violet-200 dark:hover:border-violet-800 transition-all duration-200" />
                   </Carousel>
+                  
+                  {/* Carousel Counter and Pagination */}
+                  <div className="absolute bottom-4 left-0 right-0 flex flex-col items-center space-y-2">
+                    {/* Page Counter */}
+                    <div className="bg-black/40 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">
+                      {currentSlide} / {totalSlides}
+                    </div>
+                    
+                    {/* Pagination Dots */}
+                    <div className="flex items-center space-x-1.5">
+                      {Array.from({ length: totalSlides }).map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => carouselApi?.scrollTo(index)}
+                          className={`h-2 rounded-full transition-all duration-300 ${currentSlide === index + 1
+                              ? "w-6 bg-violet-500"
+                              : "w-2 bg-gray-300/70 dark:bg-gray-600/70 hover:bg-violet-400"
+                          }`}
+                          aria-label={`Go to slide ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}
           </motion.div>
         </motion.div>
       </div>
+      
+      {/* Image Modal with Zoom using TransformWrapper */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 bg-transparent border-none shadow-2xl overflow-hidden">
+          <DialogTitle className="sr-only">
+            {project.title}
+          </DialogTitle>
+          <div className="relative w-full h-full bg-black/90 backdrop-blur-md overflow-hidden rounded-lg">
+            <TransformWrapper
+              initialScale={1}
+              minScale={0.5}
+              maxScale={6}
+              wheel={{ step: 0.1 }}
+              pinch={{}}
+              doubleClick={{ mode: "reset" }}
+              panning={{ activationKeys: ["Space"] }}
+            >
+              {({ zoomIn, zoomOut, resetTransform }) => (
+                <>
+                  {/* Zoom Controls */}
+                  <div className="absolute top-4 right-4 z-20 flex items-center space-x-2">
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="rounded-full bg-black/30 text-white hover:bg-black/50 backdrop-blur-sm"
+                      onClick={() => zoomIn(0.25)}
+                    >
+                      <ZoomIn className="h-5 w-5" />
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="rounded-full bg-black/30 text-white hover:bg-black/50 backdrop-blur-sm"
+                      onClick={() => zoomOut(0.25)}
+                    >
+                      <ZoomOut className="h-5 w-5" />
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="rounded-full bg-black/30 text-white hover:bg-black/50 backdrop-blur-sm"
+                      onClick={() => resetTransform()}
+                    >
+                      <RefreshCw className="h-5 w-5" />
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="rounded-full bg-black/30 text-white hover:bg-black/50 backdrop-blur-sm"
+                      onClick={() => setModalOpen(false)}
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </div>
+
+                  {/* Zoom Container */}
+                  <div className="overflow-hidden h-[80vh] w-full flex items-center justify-center">
+                    <TransformComponent 
+                      wrapperClass="w-full h-full flex items-center justify-center" 
+                      contentClass="!overflow-visible"
+                    >
+                      {currentImage && (
+                        <img
+                          src={currentImage}
+                          alt={project.title}
+                          className="max-w-[90vw] max-h-[70vh] object-contain"
+                        />
+                      )}
+                    </TransformComponent>
+                  </div>
+                  
+                  {/* Instructions */}
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/40 text-white text-sm px-3 py-1 rounded-full backdrop-blur-sm">
+                    Scroll to zoom • Drag to pan • Double-click to reset
+                  </div>
+                </>
+              )}
+            </TransformWrapper>
+          </div>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   )
 }

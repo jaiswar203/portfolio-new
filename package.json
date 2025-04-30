@@ -74,6 +74,7 @@
     "react-markdown": "^10.1.0",
     "react-resizable-panels": "^2.1.7",
     "react-type-animation": "^3.2.0",
+    "react-zoom-pan-pinch": "^3.7.0",
     "recharts": "2.15.0",
     "rehype-sanitize": "^6.0.0",
     "remark-breaks": "^4.0.0",

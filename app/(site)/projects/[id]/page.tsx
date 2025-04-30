@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useQuery } from "@tanstack/react-query"
 import { projectsApi } from "@/lib/api"
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
@@ -34,13 +34,13 @@ const staggerContainer = {
 
 const shapeAnimation = {
   initial: { scale: 0, opacity: 0 },
-  animate: { 
-    scale: 1, 
-    opacity: 1, 
-    transition: { 
-      duration: 0.8, 
-      ease: "easeOut" 
-    } 
+  animate: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut"
+    }
   }
 }
 
@@ -73,6 +73,28 @@ export default function ProjectDetailPage() {
     notFound()
   }
 
+  // Define components object with explicit Components type
+  const markdownComponents: Components = {
+    h2: ({ ...props }) => <h2 className="text-3xl font-bold mt-12 mb-6 border-b border-gray-200 dark:border-gray-700 pb-3" {...props} />,
+    h3: ({ ...props }) => <h3 className="text-2xl font-bold mt-10 mb-5" {...props} />,
+    img: ({ ...props }) => <img className="mb-4 rounded-md shadow-sm border dark:border-gray-700" {...props} />,
+    hr: ({ ...props }) => <hr className="my-8 border-t border-gray-200 dark:border-gray-700" {...props} />,
+    p: ({ ...props }) => <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed" {...props} />,
+    a: ({ ...props }) => <a className="text-violet-600 dark:text-violet-400 hover:text-fuchsia-600 dark:hover:text-fuchsia-400 underline decoration-violet-300 dark:decoration-violet-700 hover:decoration-fuchsia-400 dark:hover:decoration-fuchsia-500 underline-offset-2 transition-colors" {...props} />,
+    ul: ({ ...props }) => <ul className="list-disc list-inside mb-4 pl-5 space-y-2 text-gray-700 dark:text-gray-300" {...props} />,
+    ol: ({ ...props }) => <ol className="list-decimal list-inside mb-4 pl-5 space-y-2 text-gray-700 dark:text-gray-300" {...props} />,
+    li: ({ ...props }) => <li className="marker:text-violet-500 dark:marker:text-violet-400" {...props} />,
+    strong: ({ ...props }) => <strong className="font-semibold text-gray-800 dark:text-gray-200" {...props} />,
+    em: ({ ...props }) => <em className="italic text-gray-700 dark:text-gray-300" {...props} />,
+    blockquote: ({ ...props }) => <blockquote className="border-l-4 border-violet-500 dark:border-l-violet-400 pl-4 py-2 my-6 italic text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/30 rounded-r-md" {...props} />,
+    pre: ({ ...props }) => <pre className="bg-gray-800 dark:bg-gray-900 rounded-md p-4 my-6 overflow-x-auto text-sm shadow-md" {...props} />,
+    table: ({ ...props }) => <table className="w-full my-6 border-collapse border border-gray-200 dark:border-gray-700 shadow-sm" {...props} />,
+    thead: ({ ...props }) => <thead className="bg-gray-50 dark:bg-gray-800/50" {...props} />,
+    th: ({ ...props }) => <th className="border border-gray-200 dark:border-gray-700 px-4 py-2 text-left font-semibold text-gray-700 dark:text-gray-300" {...props} />,
+    td: ({ ...props }) => <td className="border border-gray-200 dark:border-gray-700 px-4 py-2 text-gray-700 dark:text-gray-300" {...props} />,
+    tr: ({ ...props }) => <tr className="border-b border-gray-200 dark:border-gray-700 even:bg-gray-50/50 dark:even:bg-gray-800/20" {...props} />,
+  }
+
   return (
     <motion.div
       className="relative overflow-hidden pt-28 md:pt-32 lg:pt-36 pb-16 md:pb-24"
@@ -91,16 +113,16 @@ export default function ProjectDetailPage() {
           </pattern>
           <rect width="100%" height="100%" fill="url(#grid)" />
         </svg>
-        <motion.div 
+        <motion.div
           variants={shapeAnimation}
           className="absolute top-1/4 left-1/4 h-8 w-8 bg-violet-500/20 dark:bg-violet-500/30 rounded-full hidden md:block"
         />
-        <motion.div 
+        <motion.div
           variants={shapeAnimation}
           transition={{ delay: 0.2 }}
           className="absolute bottom-1/3 right-1/4 h-6 w-6 bg-teal-500/20 dark:bg-teal-500/30 rounded-full hidden md:block"
         />
-        <motion.div 
+        <motion.div
           variants={shapeAnimation}
           transition={{ delay: 0.4 }}
           className="absolute top-2/3 right-1/3 h-10 w-10 bg-fuchsia-500/20 dark:bg-fuchsia-500/30 rounded-full hidden md:block"
@@ -224,10 +246,7 @@ export default function ProjectDetailPage() {
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[rehypeSanitize]}
-                  components={{
-                    h2: ({node, ...props}) => <h2 className="text-3xl font-bold mt-12 mb-6 border-b border-gray-200 dark:border-gray-700 pb-3" {...props} />,
-                    h3: ({node, ...props}) => <h3 className="text-2xl font-bold mt-10 mb-5" {...props} />,
-                  }}
+                  components={markdownComponents}
                 >
                   {project.detailedContent}
                 </ReactMarkdown>

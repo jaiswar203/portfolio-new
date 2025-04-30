@@ -248,7 +248,7 @@ export default new SmartAgent();`}</code>
             </motion.p>
 
             <motion.div variants={fadeIn} className="mb-8">
-              <h4 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-3">Some notable solutions I've delivered include:</h4>
+              <h4 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-3">Some notable solutions I&apos;ve delivered include:</h4>
               <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300">
                 <li>A Learning Management System with an integrated course builder</li>
                 <li>A real estate platform with dynamic listings and lead capture workflows</li>

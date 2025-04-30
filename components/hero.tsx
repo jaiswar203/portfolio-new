@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { TypeAnimation } from "react-type-animation"
-import { DownloadIcon, SendIcon } from "lucide-react"
+import { SendIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function Hero() {
@@ -41,13 +41,13 @@ export default function Hero() {
 
   const shapeAnimation = {
     initial: { scale: 0, opacity: 0 },
-    animate: { 
-      scale: 1, 
-      opacity: 1, 
-      transition: { 
-        duration: 0.8, 
-        ease: "easeOut" 
-      } 
+    animate: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
+      }
     }
   }
 
@@ -69,40 +69,40 @@ export default function Hero() {
         <div className="absolute top-0 right-0 h-[600px] w-[600px] bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 h-[500px] w-[500px] bg-gradient-to-tr from-blue-500/20 to-transparent rounded-full blur-3xl" />
         <div className="absolute top-1/3 left-1/3 h-[400px] w-[400px] bg-gradient-to-br from-teal-500/10 to-transparent rounded-full blur-3xl" />
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.3 }}
           transition={{ duration: 1.5 }}
           className="absolute top-20 right-20 h-40 w-40 border border-gray-200 dark:border-gray-800 rounded-full"
         />
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.2 }}
           transition={{ duration: 1.5, delay: 0.2 }}
           className="absolute bottom-20 left-20 h-60 w-60 border border-gray-200 dark:border-gray-800 rounded-full"
         />
-        
+
         <svg className="absolute opacity-10 dark:opacity-5 w-full h-full">
           <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
             <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" />
           </pattern>
           <rect width="100%" height="100%" fill="url(#grid)" />
         </svg>
-        
-        <motion.div 
+
+        <motion.div
           variants={shapeAnimation}
           initial="initial"
           animate="animate"
           className="absolute top-1/4 left-1/4 h-8 w-8 bg-purple-500/30 dark:bg-purple-500/40 rounded-full hidden md:block"
         />
-        <motion.div 
+        <motion.div
           variants={shapeAnimation}
           initial="initial"
           animate="animate"
           className="absolute bottom-1/3 right-1/4 h-6 w-6 bg-blue-500/30 dark:bg-blue-500/40 rounded-full hidden md:block"
         />
-        <motion.div 
+        <motion.div
           variants={shapeAnimation}
           initial="initial"
           animate="animate"
@@ -112,20 +112,20 @@ export default function Hero() {
 
       <div className="container">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 items-center">
-          <motion.div 
+          <motion.div
             variants={staggerContainer}
             initial="initial"
             animate="animate"
             className="flex flex-col items-start space-y-6 lg:col-span-7"
           >
-            <motion.span 
+            <motion.span
               variants={fadeInUp}
               className="inline-block px-4 py-2 rounded-full bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 text-sm font-medium border border-indigo-100 dark:border-indigo-900/50"
             >
               Full Stack Developer & AI Agent Specialist
             </motion.span>
-            
-            <motion.h1 
+
+            <motion.h1
               variants={fadeInUp}
               className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
             >
@@ -134,7 +134,7 @@ export default function Hero() {
                 Smart Agents & Scalable Systems
               </span>
             </motion.h1>
-            
+
             <motion.div variants={fadeInUp} className="h-16 md:h-20">
               <TypeAnimation
                 sequence={[
@@ -153,15 +153,15 @@ export default function Hero() {
                 className="text-lg md:text-xl text-gray-600 dark:text-gray-300"
               />
             </motion.div>
-            
-            <motion.p 
+
+            <motion.p
               variants={fadeInUp}
               className="text-gray-600 dark:text-gray-300 max-w-md text-base md:text-lg"
             >
               End-to-end development with a focus on performance, usability, and innovation.
             </motion.p>
-            
-            <motion.div 
+
+            <motion.div
               variants={fadeInUp}
               className="flex flex-wrap gap-4 mt-4"
             >
@@ -172,21 +172,21 @@ export default function Hero() {
                 <SendIcon className="mr-2 h-4 w-4" /> Contact Me
               </Button>
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               variants={fadeInUp}
               className="flex items-center gap-4 pt-4"
             >
               <span className="text-sm text-gray-500 dark:text-gray-400">Follow me on:</span>
               <div className="flex gap-3">
                 {[
-                  { name: "github", url: "https://github.com/jaiswar203" }, 
+                  { name: "github", url: "https://github.com/jaiswar203" },
                   { name: "linkedin", url: "https://www.linkedin.com/in/jaiswarnilesh/" }
                 ].map((social) => (
-                  <a 
+                  <a
                     key={social.name}
-                    href={social.url} 
-                    target="_blank" 
+                    href={social.url}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300"
                   >
@@ -199,38 +199,38 @@ export default function Hero() {
               </div>
             </motion.div>
           </motion.div>
-          
+
           <motion.div
             className="relative mt-10 lg:mt-0 flex justify-center lg:justify-end lg:col-span-5"
           >
             {/* Abstract 3D Element instead of profile image */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1.5, delay: 0.5 }}
               className="relative w-[300px] h-[300px] md:w-[380px] md:h-[380px]"
             >
               {/* 3D Abstract shapes */}
-              <motion.div 
+              <motion.div
                 variants={floatAnimation}
                 animate="animate"
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[220px] h-[220px] md:w-[280px] md:h-[280px] rounded-full bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 backdrop-blur-sm border border-white/10 dark:border-gray-800/30 shadow-xl"
               />
-              
-              <motion.div 
+
+              <motion.div
                 variants={floatAnimation}
                 animate="animate"
                 transition={{ delay: 0.5 }}
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] md:w-[220px] md:h-[220px] rounded-full bg-gradient-to-br from-purple-500/20 to-teal-500/20 backdrop-blur-sm border border-white/10 dark:border-gray-800/30 shadow-xl"
               />
-              
-              <motion.div 
+
+              <motion.div
                 variants={floatAnimation}
                 animate="animate"
                 transition={{ delay: 1 }}
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[140px] h-[140px] md:w-[160px] md:h-[160px] rounded-full bg-gradient-to-tl from-teal-500/20 to-indigo-500/20 backdrop-blur-sm border border-white/10 dark:border-gray-800/30 shadow-xl"
               />
-              
+
               {/* Code & AI symbols */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -240,7 +240,7 @@ export default function Hero() {
               >
                 &lt;/&gt;
               </motion.div>
-              
+
               {/* Floating tech icons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -250,7 +250,7 @@ export default function Hero() {
               >
                 <span className="text-xs font-medium text-sky-600 dark:text-sky-400">Next.js</span>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -259,7 +259,7 @@ export default function Hero() {
               >
                 <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">LLMs</span>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -277,7 +277,7 @@ export default function Hero() {
               >
                 <span className="text-xs font-medium text-green-600 dark:text-green-400">OpenAI</span>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -286,14 +286,14 @@ export default function Hero() {
               >
                 <span className="text-xs font-medium text-orange-600 dark:text-orange-400">Anthropic</span>
               </motion.div>
-              
+
               {/* Glowing effect */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[100px] h-[100px] bg-indigo-500/30 dark:bg-indigo-500/20 rounded-full blur-3xl" />
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] bg-purple-500/30 dark:bg-purple-500/20 rounded-full blur-2xl" />
             </motion.div>
           </motion.div>
         </div>
-        
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

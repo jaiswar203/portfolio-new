@@ -336,7 +336,7 @@ export default function Projects() {
             className="mt-12 flex justify-center"
           >
             <Button 
-              onClick={() => window.open("https://github.com/yourusername", "_blank")}
+              onClick={() => window.open("https://github.com/jaiswar203", "_blank")}
               className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-gray-800 dark:text-gray-200 border border-gray-200/50 dark:border-gray-700/50 hover:border-indigo-300 dark:hover:border-indigo-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300 shadow-glass rounded-full px-6"
             >
               View More Projects

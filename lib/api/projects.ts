@@ -64,6 +64,14 @@ const projectsApi = {
   deleteProject: async (id: string): Promise<void> => {
     await apiClient.delete(`/projects/${id}`);
   },
+
+  /**
+   * Reorder a project (move up or down)
+   */
+  reorderProject: async (projectId: string, direction: 'up' | 'down'): Promise<ProjectDTO[] | { error: string, projects: ProjectDTO[] }> => {
+    const response = await apiClient.post('/projects/reorder', { projectId, direction });
+    return response.data;
+  },
 };
 
 export default projectsApi; 

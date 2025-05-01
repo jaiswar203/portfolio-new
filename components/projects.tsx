@@ -29,10 +29,15 @@ export default function Projects() {
     queryFn: projectsApi.getActiveProjects,
   });
 
+  // Filter active projects and order them correctly
+  const activeProjects = projects.filter(project => project.isActive !== false);
+
   const filteredProjects =
     activeCategory === "all"
-      ? projects
-      : projects.filter((project) => project.category === activeCategory);
+      ? [...activeProjects].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+      : [...activeProjects]
+          .filter((project) => project.category === activeCategory)
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   // Animation variants
   const fadeIn = {

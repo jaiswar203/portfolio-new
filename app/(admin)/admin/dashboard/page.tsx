@@ -34,84 +34,53 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, PencilIcon, TrashIcon, PlusCircle, FileText, X, Plus } from 'lucide-react';
+import { Loader2, PencilIcon, TrashIcon, PlusCircle, FileText, X, Plus, ChevronUp, ChevronDown } from 'lucide-react';
 import { ProjectDTO } from '@/lib/types/project';
 import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/components/ui/use-toast';
+import { projectsApi } from '@/lib/api'; // Import projectsApi
 
-// Fetch all projects
-const fetchProjects = async (): Promise<ProjectDTO[]> => {
-  const res = await fetch('/api/projects');
-  if (!res.ok) throw new Error('Failed to fetch projects');
-  return res.json();
-};
-
-// Create a new project
-const createProject = async (project: Partial<ProjectDTO>): Promise<ProjectDTO> => {
-  const res = await fetch('/api/projects', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(project),
-  });
-
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || 'Failed to create project');
-  }
-
-  return res.json();
-};
-
-// Update an existing project
-const updateProject = async ({
+// Function to toggle isActive status
+const toggleProjectActiveStatus = async ({
   id,
-  project
+  isActive
 }: {
   id: string;
-  project: Partial<ProjectDTO>;
+  isActive: boolean;
 }): Promise<ProjectDTO> => {
   const res = await fetch(`/api/projects/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(project),
+    body: JSON.stringify({ isActive }),
   });
 
   if (!res.ok) {
     const error = await res.json();
-    throw new Error(error.error || 'Failed to update project');
+    throw new Error(error.error || 'Failed to update project status');
   }
 
   return res.json();
 };
 
-// Delete a project
-const deleteProject = async (id: string): Promise<void> => {
-  const res = await fetch(`/api/projects/${id}`, {
-    method: 'DELETE',
-  });
-
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || 'Failed to delete project');
-  }
-};
-
 export default function ProjectsPage() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentProject, setCurrentProject] = useState<Partial<ProjectDTO> & { _id?: string }>({});
   const [formError, setFormError] = useState<string | null>(null);
+  const [isReordering, setIsReordering] = useState(false);
 
   // Query to fetch projects
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
-    queryFn: fetchProjects,
+    queryFn: projectsApi.getAllProjects, // Use projectsApi.getAllProjects here
   });
 
   // Mutation to create project
   const createMutation = useMutation({
-    mutationFn: createProject,
+    mutationFn: projectsApi.createProject, // Use projectsApi
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
       setIsCreateDialogOpen(false);
@@ -122,9 +91,10 @@ export default function ProjectsPage() {
     },
   });
 
-  // Mutation to update project
+  // Mutation to update project (used by the edit dialog)
   const updateMutation = useMutation({
-    mutationFn: updateProject,
+    mutationFn: (vars: { id: string; project: Partial<ProjectDTO> }) => 
+      projectsApi.updateProject(vars.id, vars.project), // Use projectsApi
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
       setIsEditDialogOpen(false);
@@ -137,12 +107,84 @@ export default function ProjectsPage() {
 
   // Mutation to delete project
   const deleteMutation = useMutation({
-    mutationFn: deleteProject,
+    mutationFn: projectsApi.deleteProject, // Use projectsApi
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
       setIsDeleteDialogOpen(false);
     },
   });
+
+  // Mutation to reorder project
+  const reorderMutation = useMutation({
+    mutationFn: (params: {projectId: string, direction: 'up' | 'down'}) => 
+      projectsApi.reorderProject(params.projectId, params.direction),
+    onSuccess: (data: ProjectDTO[] | { error: string, projects: ProjectDTO[] }) => {
+      // Check if the response is an array (successful reorder)
+      if (Array.isArray(data)) {
+        queryClient.setQueryData(['projects'], data);
+        toast({
+          title: "Project reordered",
+          description: "The project order has been updated successfully.",
+        });
+      } 
+      // Check if the response is an object with error and projects (boundary reached)
+      else if (data && typeof data === 'object' && 'projects' in data && 'error' in data) {
+        queryClient.setQueryData(['projects'], data.projects);
+        toast({
+          title: "Reordering limit reached",
+          description: data.error || "Project cannot be moved further.",
+        });
+      }
+      setIsReordering(false);
+    },
+    onError: (error: Error) => {
+      setIsReordering(false);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to reorder project",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Mutation to toggle isActive status
+  const toggleActiveMutation = useMutation({
+    mutationFn: toggleProjectActiveStatus,
+    onSuccess: (updatedProject) => {
+      // Update the specific project in the cache
+      queryClient.setQueryData(['projects'], (oldData: ProjectDTO[] | undefined) => {
+        return oldData?.map((p) => 
+          p._id === updatedProject._id ? updatedProject : p
+        ) ?? [];
+      });
+      toast({
+        title: "Project status updated",
+        description: `Project "${updatedProject.title}" is now ${updatedProject.isActive ? 'active' : 'inactive'}.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update project status.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Handle reordering
+  const handleReorder = (projectId: string, direction: 'up' | 'down') => {
+    setIsReordering(true);
+    reorderMutation.mutate({ projectId, direction });
+  };
+
+  // Handle toggling isActive
+  const handleToggleActive = (project: ProjectDTO) => {
+    if (!project._id) return;
+    toggleActiveMutation.mutate({ 
+      id: project._id, 
+      isActive: !project.isActive 
+    });
+  };
 
   // Reset form state
   const resetForm = () => {
@@ -164,6 +206,8 @@ export default function ProjectsPage() {
       carousels: project.carousels || [],
       video_url: project.video_url,
       isPrivate: project.isPrivate,
+      isActive: project.isActive,
+      order: project.order,
     });
     setIsEditDialogOpen(true);
   };
@@ -188,13 +232,14 @@ export default function ProjectsPage() {
       title: currentProject.title,
       description: currentProject.description,
       image: currentProject.image,
-      tags: currentProject.tags,
+      tags: currentProject.tags || [],
       category: currentProject.category as string,
       liveUrl: currentProject.liveUrl,
       githubUrl: currentProject.githubUrl,
       carousels: currentProject.carousels,
       video_url: currentProject.video_url,
       isPrivate: currentProject.isPrivate,
+      isActive: currentProject.isActive !== false, // Default to true
     });
   };
 
@@ -226,6 +271,8 @@ export default function ProjectsPage() {
         carousels: currentProject.carousels,
         video_url: currentProject.video_url,
         isPrivate: currentProject.isPrivate,
+        isActive: currentProject.isActive,
+        order: currentProject.order,
       },
     });
   };
@@ -311,6 +358,7 @@ export default function ProjectsPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-12">Order</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Tags</TableHead>
@@ -318,13 +366,52 @@ export default function ProjectsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {projects.map((project: ProjectDTO) => (
+            {projects.map((project: ProjectDTO, index: number) => (
               <TableRow key={project._id}>
+                <TableCell className="font-mono text-sm text-muted-foreground">
+                  {project.order !== undefined ? project.order : '-'}
+                </TableCell>
                 <TableCell className="font-medium">{project.title}</TableCell>
                 <TableCell>{project.category}</TableCell>
                 <TableCell>{project.tags?.join(', ')}</TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-end items-center gap-3">
+                    {/* IsActive Toggle */}
+                    <div className="flex items-center gap-1.5" title={project.isActive ? 'Project is Active' : 'Project is Inactive'}>
+                      <Switch
+                        id={`isActive-${project._id}`}
+                        checked={project.isActive !== false}
+                        onCheckedChange={() => handleToggleActive(project)}
+                        disabled={toggleActiveMutation.isPending && toggleActiveMutation.variables?.id === project._id}
+                        className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-300 dark:data-[state=unchecked]:bg-gray-700"
+                      />
+                    </div>
+
+                    {/* Reorder Buttons */}
+                    <div className="flex flex-col gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => handleReorder(project._id!, 'up')}
+                        disabled={isReordering || index === 0} // Disable if first item
+                        title="Move up"
+                      >
+                        <ChevronUp className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => handleReorder(project._id!, 'down')}
+                        disabled={isReordering || index === projects.length - 1} // Disable if last item
+                        title="Move down"
+                      >
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    
+                    {/* Edit, Details, Delete Buttons */}
                     <Button
                       variant="outline"
                       size="icon"

@@ -86,6 +86,8 @@ export async function PUT(
         video_url: data.video_url,
         isDetailedPage: data.isDetailedPage,
         isPrivate: data.isPrivate,
+        order: data.order,
+        isActive: data.isActive,
       },
       { new: true, runValidators: true }
     );
@@ -130,8 +132,23 @@ export async function DELETE(
     // Delete project
     await Project.findByIdAndDelete(id);
 
+    // Rearrange order of remaining projects
+    const remainingProjects = await Project.find({}).sort({ order: 1 });
+    
+    // Update order of remaining projects to be sequential
+    const updateOperations = remainingProjects.map((project, index) => {
+      return Project.findByIdAndUpdate(
+        project._id,
+        { order: index },
+        { new: true }
+      );
+    });
+    
+    // Execute all updates in parallel
+    await Promise.all(updateOperations);
+
     return NextResponse.json(
-      { message: "Project deleted successfully" },
+      { message: "Project deleted successfully and order rearranged" },
       { status: 200 }
     );
   } catch (error) {

@@ -5,10 +5,35 @@ import { authMiddleware } from '@/lib/auth';
 import { ProjectInput } from '@/lib/types/project';
 
 // GET all projects
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await connectDB();
-    const projects = await Project.find({}).sort({ createdAt: -1 });
+    
+    const url = new URL(req.url);
+    const active = url.searchParams.get('active');
+    const featured = url.searchParams.get('featured');
+    const category = url.searchParams.get('category');
+    
+    // Build query based on parameters
+    const query: {
+      isActive?: boolean;
+      featured?: boolean;
+      category?: string;
+    } = {};
+    
+    if (active === 'true') {
+      query.isActive = true;
+    }
+    
+    if (featured === 'true') {
+      query.featured = true;
+    }
+    
+    if (category) {
+      query.category = category;
+    }
+    
+    const projects = await Project.find(query).sort({ order: 1, createdAt: -1 });
     return NextResponse.json(projects, { status: 200 });
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -38,6 +63,10 @@ export async function POST(req: NextRequest) {
     
     await connectDB();
     
+    // Find the highest order value to place new project at the end
+    const highestOrderProject = await Project.findOne().sort({ order: -1 });
+    const nextOrder = highestOrderProject ? highestOrderProject.order + 1 : 0;
+    
     // Create new project
     const newProject = await Project.create({
       title: data.title,
@@ -52,6 +81,7 @@ export async function POST(req: NextRequest) {
       video_url: data.video_url || '',
       isDetailedPage: Boolean(data.isDetailedPage),
       isPrivate: Boolean(data.isPrivate),
+      order: data.order !== undefined ? data.order : nextOrder,
     });
     
     return NextResponse.json(newProject, { status: 201 });

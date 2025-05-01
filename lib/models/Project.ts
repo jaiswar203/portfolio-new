@@ -17,6 +17,7 @@ const ProjectSchema = new Schema<IProject>(
     featured: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     isPrivate: { type: Boolean, default: false },
+    order: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

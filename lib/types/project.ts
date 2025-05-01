@@ -17,6 +17,7 @@ export interface IProject {
   featured?: boolean;
   isActive?: boolean;
   isPrivate?: boolean;
+  order?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,6 +41,7 @@ export interface ProjectDTO {
   featured?: boolean;
   isActive?: boolean;
   isPrivate?: boolean;
+  order?: number;
   createdAt?: string;
   updatedAt?: string;
 }

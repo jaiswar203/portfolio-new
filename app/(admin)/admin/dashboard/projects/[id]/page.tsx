@@ -33,6 +33,7 @@ export default function ProjectDetailEditor() {
   const [mounted, setMounted] = useState(false)
   const [isDetailedPage, setIsDetailedPage] = useState(false)
   const [isPrivate, setIsPrivate] = useState(false)
+  const [isActive, setIsActive] = useState(true)
   const [detailedContent, setDetailedContent] = useState("")
   const [carousels, setCarousels] = useState<string[]>([])
   const [carouselImage, setCarouselImage] = useState("")
@@ -53,6 +54,7 @@ export default function ProjectDetailEditor() {
       setDetailedContent(project.detailedContent || "")
       setIsDetailedPage(project.isDetailedPage || false)
       setIsPrivate(project.isPrivate || false)
+      setIsActive(project.isActive !== false)
       setCarousels(project.carousels || [])
       setVideoUrl(project.video_url || "")
     }
@@ -145,6 +147,7 @@ export default function ProjectDetailEditor() {
       detailedContent,
       isDetailedPage,
       isPrivate,
+      isActive,
       carousels,
       video_url: videoUrl,
     })
@@ -237,6 +240,23 @@ export default function ProjectDetailEditor() {
             <p className="text-sm text-gray-500 ml-6">
               When enabled, the project will be marked as private with a special indicator. 
               The code and demo links will be hidden from public view.
+            </p>
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-center space-x-2 mb-4">
+              <Switch
+                id="isActive"
+                checked={isActive}
+                onCheckedChange={setIsActive}
+              />
+              <Label htmlFor="isActive">
+                Show project in portfolio
+              </Label>
+            </div>
+            <p className="text-sm text-gray-500 ml-6">
+              Toggle to control whether this project is visible on your portfolio. 
+              Inactive projects will not be displayed to visitors.
             </p>
           </div>
 

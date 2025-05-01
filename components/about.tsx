@@ -233,33 +233,25 @@ export default new SmartAgent();`}</code>
             </motion.h3>
 
             <motion.p variants={fadeIn} className="text-gray-600 dark:text-gray-300 mb-6">
-              I&apos;m a Full Stack Developer and AI Agent Integrator with 3+ years of hands-on
-              experience building robust digital solutions across web, mobile, and AI-driven
-              domains. Over the past year, I&apos;ve helped businesses streamline operations,
-              enhance productivity, and bring ideas to life through intelligent, scalable systems.
+              I&apos;m a Full Stack Developer and AI Agent Integrator with over 3 years of experience building intelligent, scalable, and user-centric digital solutions across web, mobile, and AI domains. My work spans from architecting complex systems to integrating cutting-edge AI to solve real-world business problems.
             </motion.p>
 
             <motion.p variants={fadeIn} className="text-gray-600 dark:text-gray-300 mb-8">
-              My expertise lies in developing domain-specific AI agents that enhance internal
-              workflows — from analyzing audit data in GRC platforms to automating routine
-              decision-making processes. Alongside this, I architect and develop full-fledged web
-              and mobile applications tailored to organizational needs, often coupled with
-              custom CMS dashboards for complete content control.
+              Over the past year, I&apos;ve focused heavily on streamlining internal operations through domain-specific AI agents—whether it&apos;s automating audit workflows in GRC platforms or generating AI-driven content for creators. I specialize in building full-stack applications enriched with custom CMS dashboards, automation layers, and deep AI integrations.
             </motion.p>
 
             <motion.div variants={fadeIn} className="mb-8">
-              <h4 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-3">Some notable solutions I&apos;ve delivered include:</h4>
+              <h4 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-3">Key Projects Delivered:</h4>
               <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300">
-                <li>A Learning Management System with an integrated course builder</li>
-                <li>A real estate platform with dynamic listings and lead capture workflows</li>
-                <li>An AI-powered platform integrating OpenAI, image generation models, voice synthesis, and more</li>
+                <li>A Fully Fledged Android & iOS Application with a Custom-Built CMS</li>
+                <li>A centralized client/order/AMC management system replacing Excel workflows with a smart dashboard, automated reminders, and revenue analytics</li>
+                <li>A Micro SaaS toolkit for YouTubers with tools for AI-generated reels, voice dubbing, thumbnail editing, and more</li>
+                <li>A Learning Management System with an integrated course builder and admin controls</li>
               </ul>
             </motion.div>
 
             <motion.p variants={fadeIn} className="text-gray-600 dark:text-gray-300 mb-8">
-              I thrive at the intersection of technology, usability, and innovation — blending
-              backend power, frontend precision, and AI intelligence to build systems that
-              deliver real-world impact.
+              I thrive at the intersection of usability, backend architecture, and AI — blending thoughtful engineering with powerful automation to deliver systems that drive efficiency and impact.
             </motion.p>
 
 

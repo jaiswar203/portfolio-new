@@ -32,6 +32,7 @@ export default function ProjectDetailEditor() {
 
   const [mounted, setMounted] = useState(false)
   const [isDetailedPage, setIsDetailedPage] = useState(false)
+  const [isPrivate, setIsPrivate] = useState(false)
   const [detailedContent, setDetailedContent] = useState("")
   const [carousels, setCarousels] = useState<string[]>([])
   const [carouselImage, setCarouselImage] = useState("")
@@ -51,6 +52,7 @@ export default function ProjectDetailEditor() {
     if (project) {
       setDetailedContent(project.detailedContent || "")
       setIsDetailedPage(project.isDetailedPage || false)
+      setIsPrivate(project.isPrivate || false)
       setCarousels(project.carousels || [])
       setVideoUrl(project.video_url || "")
     }
@@ -142,6 +144,7 @@ export default function ProjectDetailEditor() {
     updateMutation.mutate({
       detailedContent,
       isDetailedPage,
+      isPrivate,
       carousels,
       video_url: videoUrl,
     })
@@ -217,6 +220,23 @@ export default function ProjectDetailEditor() {
             <p className="text-sm text-gray-500 ml-6">
               When enabled, a &qout;View Details&qout; button will appear on the project card, 
               linking to a dedicated page with this markdown content.
+            </p>
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-center space-x-2 mb-4">
+              <Switch
+                id="isPrivate"
+                checked={isPrivate}
+                onCheckedChange={setIsPrivate}
+              />
+              <Label htmlFor="isPrivate">
+                Mark as private project
+              </Label>
+            </div>
+            <p className="text-sm text-gray-500 ml-6">
+              When enabled, the project will be marked as private with a special indicator. 
+              The code and demo links will be hidden from public view.
             </p>
           </div>
 

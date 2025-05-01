@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound, useParams } from "next/navigation"
-import { ArrowLeft, Github, ExternalLink, Code, ZoomIn, ZoomOut, X, RefreshCw } from "lucide-react"
+import { ArrowLeft, Github, ExternalLink, Code, ZoomIn, ZoomOut, X, RefreshCw, Lock, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -19,6 +19,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { motion } from "framer-motion"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 // Animation variants similar to Hero
 const fadeInUp = {
@@ -209,6 +210,16 @@ export default function ProjectDetailPage() {
                       {tag}
                     </Badge>
                   ))}
+                  
+                  {project.isPrivate && (
+                    <Badge
+                      variant="secondary"
+                      className="bg-gradient-to-r from-gray-700/90 to-gray-900/90 text-white px-3 py-1 text-xs md:text-sm border border-transparent shadow-sm flex items-center gap-1"
+                    >
+                      <Lock className="w-3 h-3" />
+                      Private Project
+                    </Badge>
+                  )}
                 </div>
                 <div className="flex items-center text-gray-300 text-sm mt-3">
                   <Code className="h-4 w-4 mr-1.5 text-teal-400" />
@@ -226,9 +237,21 @@ export default function ProjectDetailPage() {
             initial="initial"
             animate="animate"
           >
+            {project.isPrivate && (
+              <motion.div variants={fadeInUp} className="mb-10">
+                <Alert className="bg-gray-100/80 dark:bg-gray-800/80 border-gray-300 dark:border-gray-700">
+                  <AlertTriangle className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+                  <AlertTitle className="text-gray-900 dark:text-gray-100 font-semibold text-lg">Private Project</AlertTitle>
+                  <AlertDescription className="text-gray-700 dark:text-gray-300">
+                    This is a private project with restricted access. The demo and source code are not publicly available.
+                  </AlertDescription>
+                </Alert>
+              </motion.div>
+            )}
+
             <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-between gap-6 mb-10">
               <div className="flex flex-wrap gap-4">
-                {project.liveUrl && (
+                {project.liveUrl && !project.isPrivate && (
                   <Button
                     className="bg-gradient-to-r from-violet-600 via-fuchsia-600 to-teal-500 hover:from-violet-700 hover:via-fuchsia-700 hover:to-teal-600 text-white shadow-md hover:shadow-lg transition-all duration-300 rounded-full px-6 py-2"
                     asChild
@@ -239,7 +262,7 @@ export default function ProjectDetailPage() {
                     </Link>
                   </Button>
                 )}
-                {project.githubUrl && (
+                {project.githubUrl && !project.isPrivate && (
                   <Button
                     variant="outline"
                     className="border-violet-300 dark:border-violet-800 text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-950/30 hover:border-violet-400 dark:hover:border-violet-700 shadow-sm transition-all duration-300 rounded-full px-6 py-2"
@@ -249,6 +272,16 @@ export default function ProjectDetailPage() {
                       <Github className="h-4 w-4 mr-2" />
                       View Code
                     </Link>
+                  </Button>
+                )}
+                {project.isPrivate && (
+                  <Button
+                    variant="outline"
+                    className="border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400 bg-gray-100/50 dark:bg-gray-800/50 cursor-not-allowed shadow-sm rounded-full px-6 py-2"
+                    disabled
+                  >
+                    <Lock className="h-4 w-4 mr-2" />
+                    Private Project
                   </Button>
                 )}
               </div>

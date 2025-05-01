@@ -85,6 +85,7 @@ export async function PUT(
         carousels: data.carousels,
         video_url: data.video_url,
         isDetailedPage: data.isDetailedPage,
+        isPrivate: data.isPrivate,
       },
       { new: true, runValidators: true }
     );

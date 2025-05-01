@@ -16,6 +16,7 @@ const ProjectSchema = new Schema<IProject>(
     isDetailedPage: { type: Boolean, default: false },
     featured: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
+    isPrivate: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

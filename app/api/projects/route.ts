@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
       carousels: data.carousels || [],
       video_url: data.video_url || '',
       isDetailedPage: Boolean(data.isDetailedPage),
+      isPrivate: Boolean(data.isPrivate),
     });
     
     return NextResponse.json(newProject, { status: 201 });

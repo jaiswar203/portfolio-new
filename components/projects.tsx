@@ -4,7 +4,7 @@ import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ExternalLink, Github, Loader2, Info } from "lucide-react"
+import { ExternalLink, Github, Loader2, Info, Lock, ShieldAlert } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -184,9 +184,9 @@ export default function Projects() {
                 variants={item}
                 layout
                 whileHover={{ y: -5, transition: { duration: 0.3 } }}
-                className="group"
+                className="group h-full"
               >
-                <Card className="overflow-hidden border-none rounded-2xl bg-white/80 dark:bg-gray-800/60 backdrop-blur-sm shadow-glass hover:shadow-glass-strong transition-all duration-300">
+                <Card className="flex flex-col h-full overflow-hidden border-none rounded-2xl bg-white/80 dark:bg-gray-800/60 backdrop-blur-sm shadow-glass hover:shadow-glass-strong transition-all duration-300">
                   <div className="relative h-52 w-full overflow-hidden">
                     {project.image && (
                       <Image
@@ -203,15 +203,34 @@ export default function Projects() {
                       </div>
                     )}
                     
+                    {project.isPrivate && (
+                      <div className="absolute top-4 right-4 bg-gray-800/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5" />
+                        Private
+                      </div>
+                    )}
+                    
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                   
-                  <CardContent className="p-6 relative z-10">
-                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
-                      {project.title}
-                    </h3>
+                  <CardContent className="p-6 relative z-10 flex flex-col flex-grow">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">
+                        {project.title}
+                      </h3>
+                      
+                      {project.isPrivate && (
+                        <Badge 
+                          variant="outline" 
+                          className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-700 ml-2 flex items-center gap-1"
+                        >
+                          <Lock className="w-3 h-3" />
+                          Private
+                        </Badge>
+                      )}
+                    </div>
                     
-                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 flex-shrink-0">
                       {project.description}
                     </p>
                     
@@ -227,8 +246,8 @@ export default function Projects() {
                       ))}
                     </div>
                     
-                    <div className="flex gap-3">
-                      {project.isDetailedPage && (
+                    <div className="flex gap-3 mt-auto">
+                      {project.isDetailedPage && !project.isPrivate && (
                         <Button
                           variant="default"
                           size="sm"
@@ -242,7 +261,21 @@ export default function Projects() {
                         </Button>
                       )}
                       
-                      {project.liveUrl && (
+                      {project.isDetailedPage && project.isPrivate && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          asChild
+                          className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white shadow-md"
+                        >
+                          <Link href={`/projects/${project._id}`}>
+                            <Info className="mr-1.5 h-4 w-4" />
+                            Details
+                          </Link>
+                        </Button>
+                      )}
+                      
+                      {project.liveUrl && !project.isPrivate && (
                         <Button
                           variant="outline"
                           size="sm"
@@ -256,7 +289,7 @@ export default function Projects() {
                         </Button>
                       )}
                       
-                      {project.githubUrl && (
+                      {project.githubUrl && !project.isPrivate && (
                         <Button
                           variant="outline"
                           size="sm"
@@ -267,6 +300,18 @@ export default function Projects() {
                             <Github className="mr-1.5 h-4 w-4" />
                             Code
                           </Link>
+                        </Button>
+                      )}
+                      
+                      {project.isPrivate && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled
+                          className="ml-auto border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400 bg-gray-50/50 dark:bg-gray-800/50 cursor-not-allowed flex items-center gap-1.5"
+                        >
+                          <ShieldAlert className="h-4 w-4" />
+                          Restricted
                         </Button>
                       )}
                     </div>

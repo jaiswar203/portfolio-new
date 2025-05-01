@@ -16,6 +16,7 @@ export interface IProject {
   isDetailedPage: boolean;
   featured?: boolean;
   isActive?: boolean;
+  isPrivate?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -38,6 +39,7 @@ export interface ProjectDTO {
   isDetailedPage?: boolean;
   featured?: boolean;
   isActive?: boolean;
+  isPrivate?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

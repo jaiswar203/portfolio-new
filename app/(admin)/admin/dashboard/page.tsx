@@ -36,6 +36,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, PencilIcon, TrashIcon, PlusCircle, FileText, X, Plus } from 'lucide-react';
 import { ProjectDTO } from '@/lib/types/project';
+import { Switch } from '@/components/ui/switch';
 
 // Fetch all projects
 const fetchProjects = async (): Promise<ProjectDTO[]> => {
@@ -162,6 +163,7 @@ export default function ProjectsPage() {
       githubUrl: project.githubUrl,
       carousels: project.carousels || [],
       video_url: project.video_url,
+      isPrivate: project.isPrivate,
     });
     setIsEditDialogOpen(true);
   };
@@ -192,6 +194,7 @@ export default function ProjectsPage() {
       githubUrl: currentProject.githubUrl,
       carousels: currentProject.carousels,
       video_url: currentProject.video_url,
+      isPrivate: currentProject.isPrivate,
     });
   };
 
@@ -222,6 +225,7 @@ export default function ProjectsPage() {
         githubUrl: currentProject.githubUrl,
         carousels: currentProject.carousels,
         video_url: currentProject.video_url,
+        isPrivate: currentProject.isPrivate,
       },
     });
   };
@@ -577,6 +581,24 @@ export default function ProjectsPage() {
                   className="col-span-3"
                 />
               </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="private" className="text-right">
+                  Private Project
+                </Label>
+                <div className="col-span-3 flex items-center space-x-2">
+                  <Switch
+                    id="private"
+                    checked={currentProject.isPrivate || false}
+                    onCheckedChange={(checked) => 
+                      setCurrentProject((prev) => ({ ...prev, isPrivate: checked }))
+                    }
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    Mark this project as private. Private projects will be displayed with a special indicator.
+                  </span>
+                </div>
+              </div>
             </div>
             <DialogFooter>
               <Button
@@ -831,6 +853,24 @@ export default function ProjectsPage() {
                   placeholder="https://www.youtube.com/embed/video_id"
                   className="col-span-3"
                 />
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-private" className="text-right">
+                  Private Project
+                </Label>
+                <div className="col-span-3 flex items-center space-x-2">
+                  <Switch
+                    id="edit-private"
+                    checked={currentProject.isPrivate || false}
+                    onCheckedChange={(checked) => 
+                      setCurrentProject((prev) => ({ ...prev, isPrivate: checked }))
+                    }
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    Mark this project as private. Private projects will be displayed with a special indicator.
+                  </span>
+                </div>
               </div>
             </div>
             <DialogFooter>

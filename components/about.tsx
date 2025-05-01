@@ -246,6 +246,7 @@ export default new SmartAgent();`}</code>
                 <li>A Fully Fledged Android & iOS Application with a Custom-Built CMS</li>
                 <li>A centralized client/order/AMC management system replacing Excel workflows with a smart dashboard, automated reminders, and revenue analytics</li>
                 <li>A Micro SaaS toolkit for YouTubers with tools for AI-generated reels, voice dubbing, thumbnail editing, and more</li>
+                <li>A AI Agent for Generating Audit reports in PDF, Summary and Conversational Message flow with the user</li>
                 <li>A Learning Management System with an integrated course builder and admin controls</li>
               </ul>
             </motion.div>

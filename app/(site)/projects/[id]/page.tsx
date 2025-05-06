@@ -20,6 +20,7 @@ import { motion } from "framer-motion"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import Player from 'next-video/player';
 
 // Animation variants similar to Hero
 const fadeInUp = {
@@ -301,6 +302,28 @@ export default function ProjectDetailPage() {
               </p>
             </motion.div>
 
+            {/* Video Player - Custom Component */}
+            {project.video_url && (
+              <motion.div 
+                variants={fadeInUp} 
+                className="mt-16 mb-16"
+              >
+                <div className="flex items-center space-x-2 mb-8 justify-center">
+                  <div className="h-1 w-16 bg-gradient-to-r from-transparent via-violet-500 to-fuchsia-500 rounded-full"></div>
+                  <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-600 via-fuchsia-600 to-teal-500 dark:from-violet-400 dark:via-fuchsia-400 dark:to-teal-400 text-center">Project Demo</h2>
+                  <div className="h-1 w-16 bg-gradient-to-l from-transparent via-fuchsia-500 to-teal-500 rounded-full"></div>
+                </div>
+                
+                <div className="rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-800/50 overflow-hidden">
+                  <Player
+                    src={project.video_url}
+                    poster={project.image}
+                    className="aspect-video"
+                  />
+                </div>
+              </motion.div>
+            )}
+
             {/* Markdown Content */}
             {project.detailedContent && mounted && (
               <motion.div
@@ -466,7 +489,7 @@ export default function ProjectDetailPage() {
   )
 }
 
-// Updated Loading Skeleton with consistent background and theme hints
+// Updated Loading Skeleton with video player skeleton
 function LoadingSkeleton() {
   return (
     <div className="relative overflow-hidden pt-28 md:pt-32 lg:pt-36 pb-16 md:pb-24 bg-gradient-to-b from-white to-gray-50 dark:from-black dark:to-gray-950 min-h-screen">
@@ -492,6 +515,11 @@ function LoadingSkeleton() {
             </div>
             <Skeleton className="h-6 w-48 mb-4 rounded" />
             <Skeleton className="h-20 w-full mb-10 rounded" />
+            
+            {/* Video player skeleton */}
+            <Skeleton className="h-8 w-36 mx-auto mb-4 rounded" />
+            <Skeleton className="h-[400px] w-full mb-10 rounded-xl" />
+            
             <Skeleton className="h-96 w-full rounded-xl" />
           </div>
         </div>

@@ -92,6 +92,7 @@ export default function Footer() {
               {[
                 { href: "#about", label: "About Me" },
                 { href: "#projects", label: "Projects" },
+                { href: "/blogs", label: "Blogs" },
                 { href: "#experience", label: "Experience" },
                 { href: "#services", label: "Services" },
                 { href: "#contact", label: "Contact" },

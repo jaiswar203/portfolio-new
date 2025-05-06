@@ -39,6 +39,7 @@ import { ProjectDTO } from '@/lib/types/project';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/components/ui/use-toast';
 import { projectsApi } from '@/lib/api'; // Import projectsApi
+import { useRouter } from 'next/navigation';
 
 // Function to toggle isActive status
 const toggleProjectActiveStatus = async ({
@@ -71,6 +72,7 @@ export default function ProjectsPage() {
   const [currentProject, setCurrentProject] = useState<Partial<ProjectDTO> & { _id?: string }>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isReordering, setIsReordering] = useState(false);
+  const router = useRouter();
 
   // Query to fetch projects
   const { data: projects = [], isLoading } = useQuery({
@@ -337,15 +339,19 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold">Manage Projects</h1>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
-          <PlusCircle className="h-4 w-4 mr-2" />
-          Add Project
-        </Button>
+    <div className="container py-10">
+      <div className="mb-8 flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Projects Dashboard</h1>
+        
+        <div className="flex gap-4">
+          <Button onClick={() => setIsCreateDialogOpen(true)}>
+            <PlusCircle className="h-4 w-4 mr-2" />
+            Add New Project
+          </Button>
+        </div>
       </div>
 
+      {/* Projects List */}
       {isLoading ? (
         <div className="flex justify-center my-12">
           <Loader2 className="h-8 w-8 animate-spin" />
@@ -443,7 +449,63 @@ export default function ProjectsPage() {
         </Table>
       )}
 
-      {/* Create Project Dialog */}
+      {/* Blog Management Card */}
+      <div className="mt-16 bg-gray-50 dark:bg-gray-800/50 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="text-2xl font-bold">Blog Management</h2>
+              <p className="text-muted-foreground mt-1">Manage your blog posts, create new content, and track views</p>
+            </div>
+            <Button onClick={() => router.push('/admin/dashboard/blogs')} className="bg-blue-600 hover:bg-blue-700">
+              <FileText className="h-4 w-4 mr-2" />
+              Manage Blogs
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div className="flex justify-between items-center">
+                <h3 className="font-medium">Create New Blog</h3>
+                <Button variant="ghost" size="sm" onClick={() => router.push('/admin/dashboard/blogs/new')}>
+                  <PlusCircle className="h-4 w-4 mr-1" />
+                  New
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">Start writing a new blog post or article</p>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div className="flex justify-between items-center">
+                <h3 className="font-medium">Edit Existing</h3>
+                <Button variant="ghost" size="sm" onClick={() => router.push('/admin/dashboard/blogs')}>
+                  <PencilIcon className="h-4 w-4 mr-1" />
+                  Edit
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">Modify or update your existing blog posts</p>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
+              <div className="flex justify-between items-center">
+                <h3 className="font-medium">View Blog Page</h3>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/blogs">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-1">
+                      <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+                      <path fillRule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                    </svg>
+                    View
+                  </Link>
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">See how your blog looks to visitors</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Create Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
           <DialogHeader>

@@ -5,6 +5,7 @@ import Technologies from "@/components/technologies"
 import Experience from "@/components/experience"
 import Testimonials from "@/components/testimonials"
 import Projects from "@/components/projects"
+import BlogsSection from "@/components/blogs-section"
 import Contact from "@/components/contact"
 
 export default function Home() {
@@ -49,6 +50,12 @@ export default function Home() {
         <div className="section-divider" aria-hidden="true"></div>
       </div>
       <Projects />
+      
+      {/* Blogs Section with divider */}
+      <div className="container mx-auto px-4">
+        <div className="section-divider" aria-hidden="true"></div>
+      </div>
+      <BlogsSection />
       
       {/* Testimonials Section with divider */}
       <div className="container mx-auto px-4">

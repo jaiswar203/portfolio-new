@@ -1,0 +1,52 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Blog SEO and Metadata Structure
+
+This document outlines the structure for SEO and metadata generation for the blog section of the Next.js application.
+
+## Key Files for Metadata
+
+1.  **Blog Listing Page Metadata (`/app/(site)/blogs/page-metadata.ts`)**: 
+    *   Handles dynamic metadata for the main blog listing page (`/blogs`).
+    *   Source: [app/(site)/blogs/page-metadata.ts](mdc:app/(site)/blogs/page-metadata.ts)
+    *   The corresponding layout that uses this is [app/(site)/blogs/layout.tsx](mdc:app/(site)/blogs/layout.tsx).
+
+2.  **Individual Blog Post Metadata (`/app/(site)/blogs/[slug]/layout.tsx`)**:
+    *   Generates dynamic metadata for each individual blog post page (e.g., `/blogs/my-first-post`).
+    *   The `generateMetadata` function in this file fetches blog-specific data (title, excerpt, cover image, tags, etc.) from MongoDB using the `Blog` model.
+    *   Source: [app/(site)/blogs/[slug]/layout.tsx](mdc:app/(site)/blogs/[slug]/layout.tsx)
+
+3.  **JSON-LD for Blog Posts (`/components/blog-json-ld.tsx`)**:
+    *   A client component responsible for generating JSON-LD structured data for individual blog posts, enhancing SEO.
+    *   This component is used within the individual blog post page.
+    *   Source: [components/blog-json-ld.tsx](mdc:components/blog-json-ld.tsx)
+    *   Usage Example: [app/(site)/blogs/[slug]/page.tsx](mdc:app/(site)/blogs/[slug]/page.tsx)
+
+## SEO Utility Files
+
+1.  **Sitemap Generation (`/app/sitemap.ts`)**:
+    *   Programmatically generates `sitemap.xml` for the entire site, including static pages and dynamic blog post URLs.
+    *   Fetches published blog slugs from MongoDB to include them in the sitemap.
+    *   Source: [app/sitemap.ts](mdc:app/sitemap.ts)
+
+2.  **Robots.txt Generation (`/app/robots.ts`)**:
+    *   Programmatically generates the `robots.txt` file to instruct web crawlers.
+    *   Includes a link to the sitemap and specifies disallowed paths (e.g., `/admin/`, `/api/`).
+    *   Source: [app/robots.ts](mdc:app/robots.ts)
+
+## Data Models
+
+*   **Blog Model (`/lib/models/Blog.ts`)**:
+    *   Defines the Mongoose schema for blog posts, which is the source for all dynamic metadata and content.
+    *   Source: [lib/models/Blog.ts](mdc:lib/models/Blog.ts)
+
+## API Routes (Content Retrieval)
+
+*   **Get Blog by Slug (`/app/api/blogs/by-slug/[slug]/route.ts`)**:
+    *   API endpoint used to fetch individual blog post data for public viewing, often consumed by client-side components or for dynamic data needs.
+    *   Source: [app/api/blogs/by-slug/[slug]/route.ts](mdc:app/api/blogs/by-slug/[slug]/route.ts)
+
+This structure ensures that blog metadata is dynamic, SEO-friendly, and leverages Next.js features for metadata management and generation.

@@ -41,6 +41,7 @@
     "@tanstack/react-query-devtools": "^5.74.4",
     "@types/nodemailer": "^6.4.17",
     "@uiw/react-md-editor": "^4.0.5",
+    "@vercel/analytics": "^1.5.0",
     "animejs": "^4.0.1",
     "autoprefixer": "^10.4.20",
     "axios": "^1.8.4",

@@ -1,6 +1,8 @@
 import type React from "react"
 import "@/app/globals.css"
 import localFont from "next/font/local"
+import { Analytics } from "@vercel/analytics/react"
+
 
 const satoshi = localFont({
   src: [
@@ -106,6 +108,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className="light-theme-gradient">
       <body className={satoshi.className}>
         {children}
+        <Analytics />
       </body>
     </html>
   )

@@ -18,7 +18,6 @@ export default function BlogsLayout({
       <Providers>
         <Header />
         <main>{children}</main>
-        {/* <Footer /> */}
       </Providers>
     </ThemeProvider>
   )

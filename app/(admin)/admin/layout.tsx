@@ -96,6 +96,20 @@ export default function AdminLayout({
           >
             <Link href="/admin/dashboard/testimonials">Testimonials</Link>
           </TabsTrigger>
+          <TabsTrigger 
+            value="blogs" 
+            asChild
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+          >
+            <Link href="/admin/dashboard/blogs">Blogs</Link>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="bio" 
+            asChild
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+          >
+            <Link href="/admin/dashboard/bio">Bio for LLMs</Link>
+          </TabsTrigger>
         </TabsList>
       </Tabs>
 

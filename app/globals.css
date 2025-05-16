@@ -30,28 +30,28 @@
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 0 0% 98%;
-    --card: 222 47% 8%;
-    --card-foreground: 0 0% 98%;
-    --popover: 222 47% 8%;
-    --popover-foreground: 0 0% 98%;
+    --background: 230 25% 8%;
+    --foreground: 214 10% 90%;
+    --card: 232 27% 10%;
+    --card-foreground: 214 10% 90%;
+    --popover: 232 27% 10%;
+    --popover-foreground: 214 10% 90%;
     
-    /* Updated primary color to indigo */
-    --primary: 238 78% 58%;
-    --primary-foreground: 240 60% 99%;
+    /* Updated primary color to a richer blue */
+    --primary: 226 70% 55%;
+    --primary-foreground: 214 10% 90%;
     
-    --secondary: 223 47% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 223 47% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 262 83% 58%;
-    --accent-foreground: 260 60% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 223 47% 14.9%;
-    --input: 223 47% 14.9%;
-    --ring: 238 78% 58%;
+    --secondary: 232 25% 16%;
+    --secondary-foreground: 214 10% 90%;
+    --muted: 232 25% 16%;
+    --muted-foreground: 214 20% 65%;
+    --accent: 272 76% 53%;
+    --accent-foreground: 214 10% 90%;
+    --destructive: 0 70% 35%;
+    --destructive-foreground: 214 10% 90%;
+    --border: 232 25% 18%;
+    --input: 232 25% 18%;
+    --ring: 226 70% 55%;
   }
 }
 
@@ -83,14 +83,14 @@ html:not(.dark) body {
 
 /* Dark theme gradient */
 html.dark {
-  background: linear-gradient(125deg, rgb(49, 46, 129) 0%, rgb(76, 29, 149) 25%, rgb(88, 28, 135) 50%, rgb(67, 20, 7) 75%, rgb(71, 85, 105) 100%);
+  background: linear-gradient(125deg, rgb(30, 41, 59) 0%, rgb(51, 65, 85) 25%, rgb(15, 23, 42) 50%, rgb(30, 58, 138) 75%, rgb(38, 38, 76) 100%);
   background-size: 400% 400%;
   background-attachment: fixed;
   animation: gradientAnimation 15s ease infinite;
 }
 
 html.dark body {
-  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.98) 50%, rgba(15, 23, 42, 1) 100%);
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.92) 0%, rgba(17, 24, 39, 0.96) 50%, rgba(12, 20, 33, 1) 100%);
   background-attachment: fixed;
 }
 
@@ -124,8 +124,9 @@ html.dark body {
   }
   
   .dark .glass-effect {
-    background: rgba(15, 23, 42, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(15, 23, 42, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   }
   
   .section-divider {
